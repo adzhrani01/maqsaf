@@ -130,14 +130,20 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.teal[50],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                  colors: [Color.fromARGB(255, 31, 96, 126), Color(0xFF15445A)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -198,7 +204,6 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -206,7 +211,7 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                 children: [
                   const Text(
                     ':المحذوفات',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Color(0xFF15445A)),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -224,10 +229,10 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                             selected: isSelected,
                             onSelected: (_) => toggleFilter(filter['id']!),
                             backgroundColor: Colors.white,
-                            selectedColor: Colors.teal[600],
+                            selectedColor: Color(0xFF15445A),
                             labelStyle: TextStyle(
                               color:
-                                  isSelected ? Colors.white : Colors.grey[600],
+                                  isSelected ? Colors.white : Color(0xFF15445A),
                             ),
                           ),
                         );
@@ -237,7 +242,6 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                 ],
               ),
             ),
-
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -246,7 +250,7 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                   children: [
                     Text(
                       ':قائمة الطعام الحالية بعد الحذف',
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(color: Color(0xFF15445A)),
                     ),
                     const SizedBox(height: 16),
                     Expanded(

@@ -27,167 +27,179 @@ class _HomePageState extends State<HomePage> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF5F5F5),
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 370,
-                floating: false,
-                pinned: true,
-                elevation: 0,
-                leading: Container(),
-                backgroundColor: Colors.transparent,
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
-                    ),
-                  ),
-                  child: FlexibleSpaceBar(
-                    background: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // Header Section
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.menu, color: Colors.white),
-                                onPressed: () {
-                                  navigationPush(
-                                      context, SelectStudentScreen());
-                                },
-                              ),
-                              Container()
-                            ],
-                          ),
-                        ),
-
-                        // Profile Section with Stats
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: CircleAvatar(
-                                  radius: width * 0.12,
-                                  backgroundImage:
-                                      AssetImage(AssetsPath.rectangle_student),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'محمد خالد الحربي',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: width * 0.05,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              // Stats Card
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 20),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                      color: Colors.white.withOpacity(0.2)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    _buildHeaderStat('الحد اليومي', '10 س.ر'),
-                                    Container(
-                                      height: 40,
-                                      width: 1,
-                                      color: Colors.white.withOpacity(0.3),
-                                    ),
-                                    _buildHeaderStat('الرصيد الحالي', '55 س.ر'),
-                                    Container(
-                                      height: 40,
-                                      width: 1,
-                                      color: Colors.white.withOpacity(0.3),
-                                    ),
-                                    _buildHeaderStat('رقم الطالب', '0001'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-
-              // Content
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    // Quick Actions Grid
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 370,
+                  floating: false,
+                  pinned: true,
+                  elevation: 0,
+                  leading: Container(),
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 31, 96, 126),
+                          Color(0xFF15445A)
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: FlexibleSpaceBar(
+                      background: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text(
-                            'الخدمات السريعة',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          // Header Section
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.menu,
+                                      color: Colors.white),
+                                  onPressed: () {
+                                    navigationPush(
+                                        context, SelectStudentScreen());
+                                  },
+                                ),
+                                Container()
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          _buildGridMenu(context),
-                        ],
-                      ),
-                    ),
 
-                    // Calendar Section
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                          // Profile Section with Stats
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: Colors.white, width: 2),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: width * 0.12,
+                                    backgroundImage: AssetImage(
+                                        AssetsPath.rectangle_student),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'محمد خالد الحربي',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: width * 0.05,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                // Stats Card
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.2)),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      _buildHeaderStat('الحد اليومي', '10 س.ر'),
+                                      Container(
+                                        height: 40,
+                                        width: 1,
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                      _buildHeaderStat(
+                                          'الرصيد الحالي', '55 س.ر'),
+                                      Container(
+                                        height: 40,
+                                        width: 1,
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                      _buildHeaderStat('رقم الطالب', '0001'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      child: const SizedBox(
-                        height: 420,
-                        child: CustomCalendar(),
-                      ),
                     ),
-                    const SizedBox(height: 20),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+
+                // Content
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      // Quick Actions Grid
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'الخدمات السريعة',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildGridMenu(context),
+                          ],
+                        ),
+                      ),
+
+                      // Calendar Section
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: const SizedBox(
+                          height: 420,
+                          child: CustomCalendar(),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -253,20 +253,29 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[50],
-        body: Column(
-          children: [
-            _buildAppBar(width),
-            _buildTabBar(width),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                padding: const EdgeInsets.only(top: 8, bottom: 16),
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => _buildOrderCard(index, width),
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ],
+          ),
+          child: Column(
+            children: [
+              _buildAppBar(width),
+              _buildTabBar(width),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 10,
+                  padding: const EdgeInsets.only(top: 8, bottom: 16),
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) =>
+                      _buildOrderCard(index, width),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
