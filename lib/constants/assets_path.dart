@@ -1,5 +1,4 @@
-
-class AssetsPath{
+class AssetsPath {
   static const String logo = 'assets/images/logo.png';
   static const String add_user_icon = 'assets/images/add_user_icon.png';
   static const String add_worker = 'assets/images/add_worker.png';
@@ -18,7 +17,7 @@ class AssetsPath{
   static const String banknotes = 'assets/images/banknotes.png';
   static const String restore = 'assets/images/restore.png';
   static const String forbidden = 'assets/images/forbidden.png';
-  static const String credit_card = 'assets/images/credit_card.png';
+  static const String credit_card = 'assets/images/credit-card.png';
   static const String food = 'assets/images/food.png';
   static const String animation_shape = 'assets/images/animation_shape.png';
   static const String animation_hape2 = 'assets/images/animation_hape2.png';

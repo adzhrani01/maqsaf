@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/screens/details_order_screen.dart';
-import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 import '../widgets/components.dart';
 
@@ -15,7 +14,6 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
   int selectedCategoryIndex = 0;
   final ScrollController _scrollController = ScrollController();
 
-  // قائمة الفئات
   final List<String> foodCategories = [
     'الوجبات الرئيسية',
     'المشروبات',
@@ -169,7 +167,7 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: 1,
+      itemCount: 15,
       itemBuilder: (context, index) {
         return Container(
           margin: const EdgeInsets.only(bottom: 16),

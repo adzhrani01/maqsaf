@@ -9,8 +9,8 @@ import 'package:maqsaf_app/screens/online_order_screen.dart';
 import 'package:maqsaf_app/screens/purchase_operation_screen.dart';
 import 'package:maqsaf_app/screens/select_student_screen.dart';
 import 'package:maqsaf_app/widgets/actionCard.dart';
-import 'package:maqsaf_app/widgets/calender.dart';
 import 'package:maqsaf_app/widgets/components.dart';
+import 'package:maqsaf_app/widgets/orderr.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -149,11 +149,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                // Content
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      // Quick Actions Grid
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
@@ -171,27 +169,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-
-                      // Calendar Section
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: const SizedBox(
-                          height: 420,
-                          child: CustomCalendar(),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                      CafeteriaOrdersWidget(),
                     ],
                   ),
                 ),

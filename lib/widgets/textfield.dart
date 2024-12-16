@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 
 class CustomTextfield extends StatelessWidget {

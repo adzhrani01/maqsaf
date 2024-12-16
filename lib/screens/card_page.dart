@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SavedCardsPage extends StatefulWidget {
+  const SavedCardsPage({super.key});
+
   @override
   _SavedCardsPageState createState() => _SavedCardsPageState();
 }
 
 class AddCardModal extends StatefulWidget {
+  const AddCardModal({super.key});
+
   @override
   _AddCardModalState createState() => _AddCardModalState();
 }
@@ -26,7 +30,7 @@ class _AddCardModalState extends State<AddCardModal>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(
@@ -60,21 +64,21 @@ class _AddCardModalState extends State<AddCardModal>
               0, (1 - _animation.value) * MediaQuery.of(context).size.height),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.85,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
               children: [
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'إضافة بطاقة جديدة',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 GestureDetector(
                   onTap: _flipCard,
                   child: TweenAnimationBuilder(
@@ -82,7 +86,7 @@ class _AddCardModalState extends State<AddCardModal>
                       begin: 0,
                       end: isCardFlipped ? 180 : 0,
                     ),
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     builder: (context, double value, child) {
                       return Transform(
                         transform: Matrix4.identity()
@@ -94,26 +98,29 @@ class _AddCardModalState extends State<AddCardModal>
                                 width: 300,
                                 height: 180,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [Colors.purple, Colors.blue],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFF0DA9A6),
+                                      Color(0xFF07A869)
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
                                   ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
+                                    const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Icon(Icons.memory,
                                             color: Colors.white,
-                                            size: 40), // رمز الشريحة
+                                            size: 40), 
                                         Icon(Icons.credit_card,
                                             color: Colors.white),
                                       ],
@@ -122,7 +129,7 @@ class _AddCardModalState extends State<AddCardModal>
                                       cardNumber.isEmpty
                                           ? '**** **** **** ****'
                                           : cardNumber,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 22,
                                         letterSpacing: 2,
@@ -136,13 +143,13 @@ class _AddCardModalState extends State<AddCardModal>
                                           cardHolderName.isEmpty
                                               ? 'اسم حامل البطاقة'
                                               : cardHolderName,
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(color: Colors.white),
                                         ),
                                         Text(
                                           expiryDate.isEmpty
                                               ? 'MM/YY'
                                               : expiryDate,
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(color: Colors.white),
                                         ),
                                       ],
                                     ),
@@ -157,13 +164,13 @@ class _AddCardModalState extends State<AddCardModal>
                                   width: 300,
                                   height: 180,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
-                                        Colors.grey[800]!,
-                                        Colors.grey[600]!
+                                        Color(0xFF0DA9A6),
+                                        Color(0xFF07A869)
                                       ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
                                     ),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -174,10 +181,10 @@ class _AddCardModalState extends State<AddCardModal>
                                         color: Colors.black,
                                         height: 40,
                                         margin:
-                                            EdgeInsets.symmetric(vertical: 15),
+                                            const EdgeInsets.symmetric(vertical: 15),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(right: 40),
+                                        margin: const EdgeInsets.only(right: 40),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -189,7 +196,7 @@ class _AddCardModalState extends State<AddCardModal>
                                               alignment: Alignment.center,
                                               child: Text(
                                                 cvv.isEmpty ? 'CVV' : cvv,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 16,
                                                 ),
@@ -206,32 +213,33 @@ class _AddCardModalState extends State<AddCardModal>
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'رقم البطاقة',
                               border: OutlineInputBorder(),
                               hintText: 'XXXX XXXX XXXX XXXX',
                             ),
                             keyboardType: TextInputType.number,
-                            maxLength: 19, // 16 أرقام + 3 مسافات
+                            maxLength: 19, 
                             onChanged: (value) {
-                              // تنسيق رقم البطاقة بإضافة مسافات كل 4 أرقام
                               value = value.replaceAll(' ', '');
-                              if (value.length > 16)
+                              if (value.length > 16) {
                                 value = value.substring(0, 16);
+                              }
                               final buffer = StringBuffer();
                               for (int i = 0; i < value.length; i++) {
                                 buffer.write(value[i]);
-                                if ((i + 1) % 4 == 0 && i != 15)
+                                if ((i + 1) % 4 == 0 && i != 15) {
                                   buffer.write(' ');
+                                }
                               }
                               setState(() {
                                 cardNumber = buffer.toString();
@@ -244,9 +252,9 @@ class _AddCardModalState extends State<AddCardModal>
                               return null;
                             },
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'اسم حامل البطاقة',
                               border: OutlineInputBorder(),
                             ),
@@ -256,12 +264,12 @@ class _AddCardModalState extends State<AddCardModal>
                               });
                             },
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Row(
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'تاريخ الانتهاء',
                                     border: OutlineInputBorder(),
                                   ),
@@ -272,10 +280,10 @@ class _AddCardModalState extends State<AddCardModal>
                                   },
                                 ),
                               ),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 16),
                               Expanded(
                                 child: TextFormField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'CVV',
                                     border: OutlineInputBorder(),
                                   ),
@@ -291,18 +299,17 @@ class _AddCardModalState extends State<AddCardModal>
                               ),
                             ],
                           ),
-                          SizedBox(height: 24),
+                          const SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // حفظ البطاقة
                                 Navigator.pop(context);
                               }
                             },
                             child: Container(
                               width: double.infinity,
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              child: Text(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: const Text(
                                 'إضافة البطاقة',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 18),
@@ -324,7 +331,6 @@ class _AddCardModalState extends State<AddCardModal>
 }
 
 class _SavedCardsPageState extends State<SavedCardsPage> {
-  // نموذج للبطاقات المحفوظة
   List<CreditCard> savedCards = [
     CreditCard(
       cardNumber: '**** **** **** 1234',
@@ -335,7 +341,7 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
     ),
     CreditCard(
       cardNumber: '**** **** **** 5678',
-      cardHolderName: 'سارة أحمد',
+      cardHolderName: ' محمد أحمد',
       expiryDate: '09/24',
       cardType: 'ماستر كارد',
       color: Colors.orange,
@@ -348,56 +354,119 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('البطاقات المحفوظة'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // قسم الفلاتر
-          Container(
-            height: 60,
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: filters.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: FilterChip(
-                    label: Text(filters[index]),
-                    selected: selectedFilter == filters[index],
-                    onSelected: (selected) {
-                      setState(() {
-                        selectedFilter = filters[index];
-                      });
-                    },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.bottomRight,
                   ),
-                );
-              },
-            ),
-          ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0, 2),
+                      blurRadius: 10,
+                    )
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'البطاقات المحفوظة',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-          // قائمة البطاقات
-          Expanded(
-            child: ListView.builder(
-              itemCount: savedCards.length,
-              itemBuilder: (context, index) {
-                final card = savedCards[index];
-                if (selectedFilter == 'الكل' ||
-                    selectedFilter == card.cardType) {
-                  return Card3D(
-                    child: CreditCardWidget(card: card),
-                    onTap: () {
-                      // معالجة حدث النقر على البطاقة
-                    },
-                  );
-                }
-                return SizedBox.shrink();
-              },
-            ),
+              Container(
+                height: 60,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: filters.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: FilterChip(
+                        label: Text(filters[index]),
+                        selected: selectedFilter == filters[index],
+                        onSelected: (selected) {
+                          setState(() {
+                            selectedFilter = filters[index];
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              // Cards List
+              Expanded(
+                child: ListView.builder(
+                  itemCount: savedCards.length,
+                  itemBuilder: (context, index) {
+                    final card = savedCards[index];
+                    if (selectedFilter == 'الكل' ||
+                        selectedFilter == card.cardType) {
+                      return Card3D(
+                        child: CreditCardWidget(card: card),
+                        onTap: () {},
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -405,16 +474,15 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
             context: context,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
-            builder: (context) => AddCardModal(),
+            builder: (context) => const AddCardModal(),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-// ويدجت البطاقة ثلاثية الأبعاد
 class Card3D extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
@@ -435,7 +503,7 @@ class _Card3DState extends State<Card3D> with SingleTickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
@@ -473,7 +541,6 @@ class _Card3DState extends State<Card3D> with SingleTickerProviderStateMixin {
   }
 }
 
-// نموذج البطاقة
 class CreditCard {
   final String cardNumber;
   final String cardHolderName;
@@ -490,7 +557,6 @@ class CreditCard {
   });
 }
 
-// ويدجت عرض البطاقة
 class CreditCardWidget extends StatelessWidget {
   final CreditCard card;
 
@@ -500,11 +566,11 @@ class CreditCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 200,
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: card.color,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             offset: Offset(0, 4),
@@ -513,7 +579,7 @@ class CreditCardWidget extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -523,13 +589,13 @@ class CreditCardWidget extends StatelessWidget {
               children: [
                 Text(
                   card.cardType,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.credit_card,
                   color: Colors.white,
                   size: 32,
@@ -538,7 +604,7 @@ class CreditCardWidget extends StatelessWidget {
             ),
             Text(
               card.cardNumber,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 22,
                 letterSpacing: 2,
@@ -550,7 +616,7 @@ class CreditCardWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'حامل البطاقة',
                       style: TextStyle(
                         color: Colors.white70,
@@ -559,7 +625,7 @@ class CreditCardWidget extends StatelessWidget {
                     ),
                     Text(
                       card.cardHolderName,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                       ),
@@ -569,7 +635,7 @@ class CreditCardWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'تاريخ الانتهاء',
                       style: TextStyle(
                         color: Colors.white70,
@@ -578,7 +644,7 @@ class CreditCardWidget extends StatelessWidget {
                     ),
                     Text(
                       card.expiryDate,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                       ),

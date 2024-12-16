@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/assets_path.dart';
-import '../widgets/custom_search_box.dart';
 import 'chat_gpt/chatgpt_voice_screen.dart';
 
 class ChatgptScreen extends StatefulWidget {
@@ -16,17 +15,14 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _showSuggestions = true;
 
-  // نموذج لرسائل المحادثة
   final List<Map<String, dynamic>> _messages = [];
 
-  // النص الافتراضي للترحيب
   final String welcomeMessage =
       'مرحباً بك! كيف يمكنني مساعدتك اليوم؟ يمكنني تقديم نصائح حول الطعام والتغذية السليمة، واقتراح وجبات صحية، والإجابة عن استفساراتك المتعلقة بالمقصف.';
 
   @override
   void initState() {
     super.initState();
-    // إضافة رسالة الترحيب
     _messages.add({
       'isUser': false,
       'message': welcomeMessage,

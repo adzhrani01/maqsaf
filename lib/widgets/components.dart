@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants/colors_constants.dart';
 
 void navigationPush(context, widget) {
   Navigator.push(

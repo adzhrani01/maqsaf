@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/constants/assets_path.dart';
-import 'package:maqsaf_app/constants/colors_constants.dart';
 import 'package:maqsaf_app/screens/charge_balance_screen.dart';
 import 'package:maqsaf_app/screens/chatgpt_screen.dart';
 import 'package:maqsaf_app/screens/home_page.dart';
@@ -18,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   late final AnimationController _controller;
-  late final Animation<double> _fadeAnimation;
 
   static const Color _navBarColor = Color(0xFF1B3F4F);
 
@@ -31,20 +29,20 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   final List<NavItem> _navItems = [
-    NavItem(icon: Icons.home_rounded, label: 'الرئيسية'),
-    NavItem(icon: Icons.favorite_rounded, label: 'المفضلة'),
-    NavItem(
+    const NavItem(icon: Icons.home_rounded, label: 'الرئيسية'),
+    const NavItem(icon: Icons.favorite_rounded, label: 'المفضلة'),
+    const NavItem(
       isCenter: true,
       icon: Icons.chat_bubble_rounded,
       label: 'المساعد',
       imagePath: AssetsPath.image,
     ),
-    NavItem(
+    const NavItem(
       icon: Icons.account_balance_wallet_rounded,
       label: 'المحفظة',
       imagePath: AssetsPath.wallet,
     ),
-    NavItem(
+    const NavItem(
       icon: Icons.person_rounded,
       label: 'حسابي',
       imagePath: AssetsPath.group,
@@ -57,9 +55,6 @@ class _HomeScreenState extends State<HomeScreen>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
     _controller.forward();
   }
@@ -132,9 +127,8 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(
               _navItems.length,
-              (index) => index == 2
-                  ? const SizedBox(width: 90) // مساحة للزر المركزي
-                  : _buildNavItem(index),
+              (index) =>
+                  index == 2 ? const SizedBox(width: 90) : _buildNavItem(index),
             ),
           ),
         ),
@@ -315,7 +309,7 @@ class CurveClipper extends CustomClipper<Path> {
 
     path.arcToPoint(
       Offset((size.width / 2) + 45, 0),
-      radius: const Radius.circular(45),
+      radius: const Radius.circular(40),
       clockwise: false,
     );
 
@@ -327,5 +321,5 @@ class CurveClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }
