@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/screens/details_order_screen.dart';
-
 import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 import '../widgets/components.dart';
@@ -14,164 +12,276 @@ class OnlineOrderScreen extends StatefulWidget {
 }
 
 class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
+  int selectedCategoryIndex = 0;
+  final ScrollController _scrollController = ScrollController();
 
-  int typeIndex = 0;
+  // قائمة الفئات
+  final List<String> foodCategories = [
+    'الوجبات الرئيسية',
+    'المشروبات',
+    'الحلويات',
+    'المقبلات',
+    'السندويشات',
+    'العصائر',
+  ];
+
   @override
   Widget build(BuildContext context) {
     final height = SizeConfig.sizeHeight(context);
     final width = SizeConfig.sizeWidth(context);
 
-    return  SafeArea(child: Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor:AppColor.primaryColor,
-        body: Container(
-          height: height,
-          decoration: linearGradientDecoration(),
-          child: ListView(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                decoration: const BoxDecoration(
-                  borderRadius:BorderRadius.only(bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30)),
-                  gradient: LinearGradient(
-                      colors: [Color(0xff2D91C0),Color(0xff15445A)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: [0,0.9]
-                  ),
+    return SafeArea(
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: Container(
+            height: height,
+            decoration: linearGradientDecoration(),
+            child: Column(
+              children: [
+                _buildAppBar(width),
+                Expanded(
+                  child: _buildFoodList(width),
                 ),
-                child:Row(
-                  children: [
-                    Expanded(flex:2,child:  Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.arrow_back,color: Colors.white,)),
-                        const SizedBox(width: 8),
-                        Text( 'طلب مسبق', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: width * 0.05)),
-                      ],
-                    )),
-                    Expanded(flex:1,child:  Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.shopping_cart_outlined,color: Colors.white,)),
-                      ],
-                    )),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(height: height * 0.06,
-                child:   ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: 10,
-                    itemBuilder: (context,index){
-                      return InkWell(
-                        onTap: (){
-                          setState(() {
-                            typeIndex = index;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border(bottom: BorderSide(color: typeIndex == index ?  Colors.black : Colors.transparent,width: 2))
-                          ),
-                          child:  Text('type${index + 1}', textAlign: TextAlign.center, style: TextStyle(color: Colors.black, fontSize: width * 0.05)),
-                        ),
-                      );
-                    }
-                ),),
-              const SizedBox(height: 20),
-              SizedBox(
-                child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16,),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: (){
-
-                        },
-                        child: Container(
-                          width: width,
-                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                          margin: const EdgeInsets.only(bottom: 10,),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFBDFFC0),
-                            borderRadius:BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(flex:1,child: Image.asset("AssetsPath.food")),
-                              const SizedBox(width: 10),
-                              Expanded(flex:3,child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('food${index + 1}', textAlign: TextAlign.start, style: TextStyle(color: Colors.black, fontSize: width * 0.04)),
-                                          Text('info${index + 1}', textAlign: TextAlign.start, style: TextStyle(color: Colors.grey, fontSize: width * 0.04)),
-                                        ],
-                                      )),
-                                      const SizedBox(width: 10),
-                                      IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_border, color: Colors.red,))
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Expanded(child: Text('10${index + 10} RSA', textAlign: TextAlign.start, style: TextStyle(color: Colors.black, fontSize: width * 0.04, fontWeight: FontWeight.w600))),
-                                      const SizedBox(width: 10),
-                                      InkWell(
-                                        onTap: (){
-                                          navigationPush(context, const DetailsOrderScreen());
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF074E0A),
-                                            borderRadius:BorderRadius.circular(10),
-                                          ),
-                                          child:  Text('Add', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: width * 0.05)),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              )),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              const SizedBox(height: 20),
-
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
+  }
+
+  Widget _buildAppBar(double width) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            offset: const Offset(0, 4),
+            blurRadius: 8,
+          )
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header section
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              bottom: 8,
+              right: 16,
+              left: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    _buildIconButton(
+                        Icons.arrow_back, () => Navigator.pop(context)),
+                    const SizedBox(width: 16),
+                    Text(
+                      'اطلب مسبقاً',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: width * 0.05,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                _buildIconButton(Icons.shopping_cart, () {}),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 22),
+          Container(
+            height: 40,
+            margin: const EdgeInsets.only(bottom: 16),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: foodCategories.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemBuilder: (context, index) {
+                final isSelected = selectedCategoryIndex == index;
+                return GestureDetector(
+                  onTap: () => setState(() => selectedCategoryIndex = index),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      foodCategories[index],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: width * 0.04,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Icon(icon, color: Colors.white, size: 22),
+      ),
+    );
+  }
+
+  Widget _buildFoodList(double width) {
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16),
+      itemCount: 1,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => navigationPush(context, const DetailsOrderScreen()),
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Icon(Icons.fastfood,
+                          color: Colors.grey.shade400, size: 40),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'وجبة ${index + 1}',
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.favorite_border),
+                                color: Colors.red,
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.fire_extinguisher_sharp,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                size: width * 0.04,
+                              ),
+                              Text(
+                                '198',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: width * 0.035,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${10 + index} ريال',
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF2D91C0),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF074E0A),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  'أضف للسلة',
+                                  style: TextStyle(fontSize: width * 0.04),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
-
-
-

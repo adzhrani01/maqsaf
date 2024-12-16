@@ -16,12 +16,20 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
   Widget _buildAppBar(double width) {
     return Container(
       padding: const EdgeInsets.only(top: 15, bottom: 15),
-      decoration: BoxDecoration(
-        color: const Color(0xff15445A),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+          begin: Alignment.bottomLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: const Offset(0, 4),
+            color: Colors.black,
+            offset: const Offset(0, 2),
             blurRadius: 10,
           )
         ],

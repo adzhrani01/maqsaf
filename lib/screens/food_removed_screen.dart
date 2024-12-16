@@ -143,13 +143,13 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 31, 96, 126), Color(0xFF15445A)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
                 ),
               ),
               child: SafeArea(

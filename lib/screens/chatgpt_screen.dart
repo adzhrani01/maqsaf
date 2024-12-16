@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/assets_path.dart';
-import '../constants/colors_constants.dart';
-import '../helpers/size_config.dart';
-import '../widgets/components.dart';
 import '../widgets/custom_search_box.dart';
 import 'chat_gpt/chatgpt_voice_screen.dart';
 
@@ -15,279 +12,311 @@ class ChatgptScreen extends StatefulWidget {
 }
 
 class _ChatgptScreenState extends State<ChatgptScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int typeIndex = 0;
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _showSuggestions = true;
+
+  // نموذج لرسائل المحادثة
+  final List<Map<String, dynamic>> _messages = [];
+
+  // النص الافتراضي للترحيب
+  final String welcomeMessage =
+      'مرحباً بك! كيف يمكنني مساعدتك اليوم؟ يمكنني تقديم نصائح حول الطعام والتغذية السليمة، واقتراح وجبات صحية، والإجابة عن استفساراتك المتعلقة بالمقصف.';
+
+  @override
+  void initState() {
+    super.initState();
+    // إضافة رسالة الترحيب
+    _messages.add({
+      'isUser': false,
+      'message': welcomeMessage,
+      'timestamp': DateTime.now(),
+    });
+  }
+
+  void _sendMessage(String message) {
+    if (message.trim().isEmpty) return;
+
+    setState(() {
+      _messages.add({
+        'isUser': true,
+        'message': message,
+        'timestamp': DateTime.now(),
+      });
+
+      _showSuggestions = false;
+
+      _messages.add({
+        'isUser': false,
+        'message': 'شكراً على سؤالك! سأقوم بمساعدتك في ما يتعلق بـ "$message"',
+        'timestamp': DateTime.now(),
+      });
+    });
+
+    _messageController.clear();
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final height = SizeConfig.sizeHeight(context);
-    final width = SizeConfig.sizeWidth(context);
-
-    return SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFF1B1B1B),
+      body: SafeArea(
         child: Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomInset: true,
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Text('ChatGPT',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: width * 0.05)),
-        ),
-        body: Container(
-          height: height,
-          decoration: linearGradientDecoration(),
-          child: ListView(
+          textDirection: TextDirection.rtl,
+          child: Column(
             children: [
-              SizedBox(height: height * 0.05),
-              Image.asset(AssetsPath.image),
-              SizedBox(height: height * 0.01),
-              SizedBox(
-                height: height * 0.10,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            children: [
-                              Text('maqsaf',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: width * 0.05)),
-                              const SizedBox(height: 5),
-                              Text('for an online merch store',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: width * 0.05)),
-                            ],
-                          ));
-                    }),
+              _buildAppBar(),
+              Expanded(
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.only(bottom: 100),
+                      itemCount: _messages.length,
+                      itemBuilder: (context, index) {
+                        final message = _messages[index];
+                        return _buildMessageBubble(message);
+                      },
+                    ),
+                    if (_showSuggestions) _buildSuggestionsOverlay(),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.camera_alt_outlined,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      )),
-                  Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.insert_photo_outlined,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      )),
-                  Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.folder_open,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      )),
-                  const Expanded(
-                    flex: 3,
-                    child: CustomSearchBox(),
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        onPressed: () {
-                          navigationPush(context, const ChatgptVoiceScreen());
-                        },
-                        icon: const Icon(
-                          Icons.headphones,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      )),
-                ],
-              ),
-              const SizedBox(height: 20),
+              _buildMessageInput(),
             ],
           ),
         ),
-        endDrawer: Drawer(
-          backgroundColor: Colors.black,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.add, color: Colors.white),
-                  title: Text(
-                    'New Chat',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.chat_bubble_outline,
-                      color: Colors.white),
-                  title: Text(
-                    'conversion 1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.chat_bubble_outline,
-                      color: Colors.white),
-                  title: Text(
-                    'conversion 1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.chat_bubble_outline,
-                      color: Colors.white),
-                  title: Text(
-                    'conversion 1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.chat_bubble_outline,
-                      color: Colors.white),
-                  title: Text(
-                    'conversion 1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.delete, color: Colors.white),
-                  title: Text(
-                    'clear conversion',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.light_mode_outlined,
-                      color: Colors.white),
-                  title: Text(
-                    'Lite mode',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.person, color: Colors.white),
-                  title: Text(
-                    'My account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.update, color: Colors.white),
-                  title: Text(
-                    'Updates & FAQ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.white,
-                ),
-                ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.white),
-                  title: Text(
-                    'logout',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: width * 0.04,
-                    ),
-                  ),
-                  onTap: () {},
-                ),
-              ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF2D91C0).withOpacity(0.8),
+            const Color(0xFF15445A).withOpacity(0.8),
+          ],
+        ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            'مساعد المقصف الذكي',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(Map<String, dynamic> message) {
+    final isUser = message['isUser'] as bool;
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      child: Row(
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!isUser) ...[
+            CircleAvatar(
+              backgroundColor: const Color(0xFF2D91C0),
+              child: Image.asset(AssetsPath.image, width: 24),
+            ),
+            const SizedBox(width: 8),
+          ],
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isUser
+                    ? const Color(0xFF2D91C0).withOpacity(0.8)
+                    : Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                message['message'] as String,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          if (isUser) ...[
+            const SizedBox(width: 8),
+            const CircleAvatar(
+              backgroundColor: Colors.grey,
+              child: Icon(Icons.person, color: Colors.white),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestionsOverlay() {
+    return Positioned(
+      bottom: 20,
+      left: 0,
+      right: 0,
+      child: Container(
+        height: 120,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            _buildSuggestionCard(
+              'نصائح غذائية',
+              Icons.health_and_safety,
+              'ما هي أفضل النصائح الغذائية للطلاب؟',
+            ),
+            _buildSuggestionCard(
+              'وجبات صحية',
+              Icons.restaurant_menu,
+              'اقترح قائمة وجبات صحية للمقصف',
+            ),
+            _buildSuggestionCard(
+              'وجبات سريعة',
+              Icons.fastfood,
+              'ما هي أفضل الوجبات السريعة المناسبة؟',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSuggestionCard(String title, IconData icon, String message) {
+    return GestureDetector(
+      onTap: () => _sendMessage(message),
+      child: Container(
+        width: 160,
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
           ),
         ),
       ),
-    ));
+      child: Row(
+        children: [
+          _buildCircularButton(
+            Icons.mic,
+            () => navigationPush(context, const ChatgptVoiceScreen()),
+          ),
+          const SizedBox(width: 8),
+          _buildCircularButton(
+            Icons.camera_alt,
+            () {},
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.1),
+                ),
+              ),
+              child: TextField(
+                controller: _messageController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'اكتب رسالتك هنا...',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: InputBorder.none,
+                ),
+                onSubmitted: _sendMessage,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          _buildCircularButton(
+            Icons.send,
+            () => _sendMessage(_messageController.text),
+            color: const Color(0xFF2D91C0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCircularButton(IconData icon, VoidCallback onPressed,
+      {Color? color}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color?.withOpacity(0.8) ?? Colors.white.withOpacity(0.1),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 }

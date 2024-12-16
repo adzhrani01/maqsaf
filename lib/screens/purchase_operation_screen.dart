@@ -16,7 +16,22 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
     return Container(
       padding: const EdgeInsets.only(top: 15, bottom: 15),
       decoration: const BoxDecoration(
-        color: Color(0xFF15445A),
+        gradient: LinearGradient(
+          colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+          begin: Alignment.bottomLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            offset: const Offset(0, 2),
+            blurRadius: 10,
+          )
+        ],
       ),
       child: SafeArea(
         child: Padding(

@@ -47,12 +47,9 @@ class _HomePageState extends State<HomePage> {
                   flexibleSpace: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 31, 96, 126),
-                          Color(0xFF15445A)
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                        colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(40),
@@ -110,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                // Stats Card
+
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 20),
