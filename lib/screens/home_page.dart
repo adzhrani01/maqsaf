@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maqsaf_app/constants/assets_path.dart';
+import 'package:maqsaf_app/screens/card_page.dart';
 import 'package:maqsaf_app/screens/charge_balance_screen.dart';
 import 'package:maqsaf_app/screens/daily_limit_screeen.dart';
 import 'package:maqsaf_app/screens/food_removed_screen.dart';
@@ -107,7 +108,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 20),
@@ -336,7 +336,7 @@ Widget _buildGridMenu(BuildContext context) {
         ActionCard(
           icon: AssetsPath.credit_card,
           label: 'بطاقاتي',
-          onTap: () {},
+          onTap: () => navigationPush(context, SavedCardsPage()),
         ),
       ],
     ),
