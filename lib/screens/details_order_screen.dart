@@ -301,14 +301,6 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
-            TextButton(
-              onPressed: () => _selectTime(context),
-              child: Text(
-                selectedTime.format(context),
-                style: TextStyle(fontSize: width * 0.04),
-              ),
-            ),
           ],
         ),
       ],
@@ -467,7 +459,7 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                                           color: Colors.grey[600]),
                                       const SizedBox(width: 8),
                                       Text(
-                                        'موعد التسليم: $selectedDate - ${selectedTime.format(context)}',
+                                        'موعد التسليم: $selectedDate',
                                         style: TextStyle(
                                           fontSize: width * 0.04,
                                           color: Colors.grey[600],
@@ -480,7 +472,6 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Total Price
                             Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
