@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:maqsaf_app/constants/colors_constants.dart';
 import 'package:maqsaf_app/screens/details_order_screen.dart';
+import 'package:maqsaf_app/screens/shopping_screen.dart';
 import '../constants/assets_path.dart';
 import '../helpers/size_config.dart';
 import '../widgets/components.dart';
@@ -187,9 +189,137 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                                 ),
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(24),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Colors.white,
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColor.primaryColor
+                                                        .withOpacity(0.1),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check_circle,
+                                                    color:
+                                                        AppColor.primaryColor,
+                                                    size: width * 0.15,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                Text(
+                                                  'تمت الإضافة بنجاح',
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.05,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 12),
+                                                Text(
+                                                  'تم إضافة المنتج إلى سلة المشتريات',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.04,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 24),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Expanded(
+                                                      child: TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical: 12),
+                                                        ),
+                                                        child: Text(
+                                                          'متابعة التسوق',
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width * 0.04,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          navigationPush(
+                                                              context,
+                                                              const CartScreen());
+                                                        },
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              AppColor
+                                                                  .primaryColor,
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical: 12),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          'الذهاب للسلة',
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width * 0.04,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF074E0A),
+                                  backgroundColor: AppColor.primaryColor,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 24,
@@ -205,7 +335,7 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                                     fontSize: width * 0.04,
                                   ),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ],

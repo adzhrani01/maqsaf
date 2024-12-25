@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/constants/assets_path.dart';
-import 'package:maqsaf_app/screens/home_page.dart';
 import 'package:maqsaf_app/screens/home_screen.dart';
 
 import '../../constants/colors_constants.dart';
