@@ -4,7 +4,7 @@ import 'package:maqsaf_app/screens/charge_balance_screen.dart';
 import 'package:maqsaf_app/screens/chatgpt_screen.dart';
 import 'package:maqsaf_app/screens/home_page.dart';
 import 'package:maqsaf_app/screens/my_favorite_screen.dart';
-import 'package:maqsaf_app/screens/profile_screen.dart';
+import 'package:maqsaf_app/screens/profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

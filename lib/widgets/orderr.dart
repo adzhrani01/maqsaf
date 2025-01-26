@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maqsaf_app/core/dialogs/logout_dialog.dart';
+import 'package:maqsaf_app/core/helpers/spacing.dart';
 
 class CafeteriaOrder {
   final String id;
@@ -140,39 +143,42 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'طلب #${currentOrder.orderNumber}',
+                      FittedBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'طلب #${currentOrder.orderNumber}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            ),
+                            horizontalSpace(10.w),
+                            Chip(
+                              avatar: Icon(
+                                _getStatusIcon(currentOrder.status),
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              label: Text(
+                                _getStatusText(currentOrder.status),
                                 style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
-                          Chip(
-                            avatar: Icon(
-                              _getStatusIcon(currentOrder.status),
-                              color: Colors.white,
-                              size: 18,
+                              backgroundColor:
+                                  _getStatusColor(currentOrder.status),
                             ),
-                            label: Text(
-                              _getStatusText(currentOrder.status),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                            backgroundColor:
-                                _getStatusColor(currentOrder.status),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ActionCard extends StatefulWidget {
   final String icon;
@@ -102,7 +103,7 @@ class _ActionCardState extends State<ActionCard>
               );
             },
           ),
-          const SizedBox(height: 12),
+           SizedBox(height: 10.h),
           TweenAnimationBuilder<double>(
             duration: const Duration(milliseconds: 200),
             tween: Tween<double>(
@@ -110,16 +111,19 @@ class _ActionCardState extends State<ActionCard>
               end: _isHovered ? 1.0 : 0.0,
             ),
             builder: (context, value, child) {
-              return Text(
-                widget.label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
-                  color: Color.lerp(
-                    primaryColor, // لون النص الأساسي
-                    primaryColor.withOpacity(0.8), // لون النص عند التحويم
-                    value,
+              return Flexible(
+                child: Text(
+                  widget.label,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
+                    color: Color.lerp(
+                      primaryColor, // لون النص الأساسي
+                      primaryColor.withOpacity(0.8), // لون النص عند التحويم
+                      value,
+                    ),
                   ),
                 ),
               );

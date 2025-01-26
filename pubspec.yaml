@@ -37,6 +37,26 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   table_calendar: ^3.1.2
+  # State Management
+  flutter_bloc: ^8.1.6
+  # A powerful HTTP client for Dart, supporting features like interceptors, global configuration, and more.
+  dio: ^5.5.0+1
+  # A package for simple, fast, and persistent storage for small data, such as user preferences.
+  get_storage: ^2.1.1
+  # A package for implementing infinite scrolling and pagination in Flutter.
+  infinite_scroll_pagination: ^4.0.0
+  # A simple and efficient dependency injection library for Dart and Flutter.
+  get_it: ^7.7.0
+  #  Flutter plugin for selecting images from the Android and iOS image library, and taking new pictures with the camera
+  image_picker: ^1.1.2
+
+  #  Flutter plugin for launching a URL. Supports web, phone, SMS, and email schemes
+  url_launcher: ^6.3.0
+  fluttertoast: ^8.2.6
+  # A flutter plugin for adapting screen and font size.Guaranteed to look good on different models
+  flutter_screenutil: ^5.7.0
+  # Beautiful animations inspired on Animate.css, every animation is a customizable widget
+  animate_do: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +68,21 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  ## tools
+  # A build system for Dart, enabling code generation and more.
+  build_runner: ^2.3.3
+
+  # A code generator for JSON serialization and deserialization in Dart.
+  json_serializable: ^6.6.1
+
+  # Annotations for the 'json_serializable' code generator, defining how JSON should be handled.
+  json_annotation: ^4.8.0
+
+  # A code generator that provides utilities for creating immutable classes, union types, and sealed classes.
+  freezed: ^2.1.0
+
+  # Annotations for the 'freezed' code generator, specifying how the generated code should behave.
+  freezed_annotation: ^2.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
