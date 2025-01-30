@@ -1,5 +1,6 @@
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:maqsaf_app/core/data/models/item_model.dart';
 import 'models.dart';
 
 part 'base_model.g.dart';
@@ -18,9 +19,9 @@ class BaseModel<T> {
   final bool? unAuthorizedRequest;
   factory BaseModel.fromJson(Map<String, dynamic> json,T Function(dynamic itemJson) fromJsonT) {
 
-
-    if(json['result']=="[]")
-      json['result']=[];
+    //
+    // if(json['result']=="[]")
+    //   json['result']=[];
 
     if(!(json['result'] is List)){
 
@@ -33,10 +34,10 @@ class BaseModel<T> {
       //   json['result']=json['result']?['items'];
       // }
     }
+
     if(json['result']==null){
       json['result']=json;
     }
-
 
 
 

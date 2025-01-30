@@ -16,6 +16,10 @@ import '../../../../../core/widgets/widgets_Informative/empty_data_view.dart';
 import '../../../../../core/widgets/widgets_Informative/loading_data_view.dart';
 import '../../../../core/dialogs/loading_dialog.dart';
 import '../../../../core/helpers/response_helper.dart';
+import '../../../../widgets/components.dart';
+import '../../../carts/cubits/item_cart_cubit/item_cart_cubit.dart';
+import '../../../payment_carts/data/models/payment_cart_model.dart';
+import '../../../success_payment_screen.dart';
 import '../../domain/repositories/orders_repository.dart';
 
 
@@ -40,20 +44,38 @@ class OrderCubit extends Cubit<OrderState>  {
 
 
   Future<void> createOrder(BuildContext context,
-      { int? itemId})  async {
+      { required List<ItemCartModel> items
+        ,int? paymentType,PaymentCartModel? paymentCart
+      })  async {
 
 
     int? studentId=  context.read<UserCubit>().user?.id;
     LoadingDialog.show(context);
     final response = await repository.createOrder(
-      itemId:itemId,
+        paymentCart: paymentCart,
+        paymentType: paymentType,
+        items: items,
+        totalPrice: "${context.read<ItemCartCubit>().totalAmountWithTax(items,withTax: 0.15).toStringAsFixed(2)}",
         studentId:studentId
     );
     response.when(
       success: (data) async {
-
+        if(paymentType==1)
+          await  context.read<UserCubit>().updateBalanceStudents(context,
+              balance: "${
+                  (num.tryParse(context.read<UserCubit>().user?.balance??"")??0)-
+                      (num.tryParse("${context.read<ItemCartCubit>().totalAmountWithTax(items,withTax: 0.15)}")??0)
+              }"
+          );
         LoadingDialog.hide(context);
+
+        if(context.read<ItemCartCubit>().cartModel?.items?.length==items.length)
+          context.read<ItemCartCubit>().cartModel?.items?.clear();
+
+
         ResponseHelper.onSuccess(context,message: data.message);
+        navigationPush(context, const SuccessPaymentScreen());
+
         // onRefreshItem(context, priceOfferId: priceOfferId);
         // context.read<PriceOfferFullsCubit>().onRefresh();
       },

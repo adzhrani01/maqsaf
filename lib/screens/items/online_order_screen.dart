@@ -1,21 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maqsaf_app/constants/colors_constants.dart';
+import 'package:maqsaf_app/screens/core/cubits/categories_cubit/categories_cubit.dart';
 import 'package:maqsaf_app/screens/details_order_screen.dart';
+import 'package:maqsaf_app/screens/items/cubits/items_cubit/items_cubit.dart';
 import 'package:maqsaf_app/screens/shopping_screen.dart';
-import '../constants/assets_path.dart';
-import '../helpers/size_config.dart';
-import '../widgets/components.dart';
 
-class MyFavoriteScreen extends StatefulWidget {
-  const MyFavoriteScreen({super.key});
+import '../../core/helpers/operation_file.dart';
+import '../../core/widgets/image/image_food.dart';
+import '../../core/widgets/widgets_Informative/loading_data_view.dart';
+import '../../helpers/size_config.dart';
+import '../../widgets/components.dart';
+import '../carts/cubits/item_cart_cubit/item_cart_cubit.dart';
+import '../carts/data/models/cart_model.dart';
+import '../carts/data/models/item_cart_model.dart';
+import '../favorite/cubits/favorite_cubit/favorite_cubit.dart';
+import '../favorite/cubits/favorites_cubit/favorites_cubit.dart';
+import '../profile/cubits/user_cubit/user_cubit.dart';
+import 'data/models/food_model.dart';
+
+class OnlineOrderScreen extends StatefulWidget {
+  const OnlineOrderScreen({super.key});
 
   @override
-  State<MyFavoriteScreen> createState() => _MyFavoriteScreenState();
+  State<OnlineOrderScreen> createState() => _OnlineOrderScreenState();
 }
 
-class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
+class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
+  int? selectedCategoryIndex ;
+  // int selectedCategoryIndex = 0;
   final ScrollController _scrollController = ScrollController();
 
+  final List<String> foodCategories = [
+    'الوجبات الرئيسية',
+    'المشروبات',
+    'الحلويات',
+    'المقبلات',
+    'السندويشات',
+    'العصائر',
+  ];
+
+  @override
+  void initState() {
+    context.read<CategoriesCubit>().init(context);
+    context.read<ItemsCubit>().init(context);
+    context.read<FavoritesCubit>().init(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final height = SizeConfig.sizeHeight(context);
@@ -31,8 +62,20 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
             child: Column(
               children: [
                 _buildAppBar(width),
+
                 Expanded(
-                  child: _buildFavoritesList(width),
+                  child:
+
+
+                  BlocBuilder<ItemsCubit,ItemsState>(
+                    buildWhen: (previous, current)=>context.read<ItemsCubit>().buildItemsWhen(previous, current),
+                    builder: (context, state)=>
+                    context.read<ItemsCubit>().buildItems(context, state,
+                        _buildFoodList(width
+                        ,context.read<ItemsCubit>().itemsByFilter
+
+                    ))
+                  ),
                 ),
               ],
             ),
@@ -62,29 +105,95 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
           )
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header section
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              bottom: 8,
+              right: 16,
+              left: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildIconButton(
-                    Icons.arrow_back, () => Navigator.pop(context)),
-                const SizedBox(width: 16),
-                Text(
-                  'الوجبات المفضلة',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: width * 0.05,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    _buildIconButton(
+                        Icons.arrow_back, () => Navigator.pop(context)),
+                    const SizedBox(width: 16),
+                    Text(
+                      'اطلب مسبقاً',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: width * 0.05,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
+                _buildIconButton(Icons.shopping_cart, () {
+                  navigationPush(context, const CartScreen());
+                }),
               ],
             ),
-            _buildIconButton(Icons.shopping_cart_outlined, () {}),
-          ],
-        ),
+          ),
+
+          SizedBox(height: 22),
+          BlocBuilder<CategoriesCubit,CategoriesState>(
+          buildWhen: (previous, current)=>context.read<CategoriesCubit>().buildCategoriesWhen(previous, current),
+          builder: (context, state)=>
+          context.read<CategoriesCubit>().buildItems(context, state,
+          Container(
+            height: 40,
+            margin: const EdgeInsets.only(bottom: 16),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: context.read<CategoriesCubit>().categories.length,
+              // itemCount: foodCategories.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemBuilder: (context, index) {
+                final item=context.read<CategoriesCubit>().categories[index];
+                final isSelected = selectedCategoryIndex == index;
+                return GestureDetector(
+                  onTap: () {
+                    context.read<ItemsCubit>().changeIndex(item.id);
+                    setState(() => selectedCategoryIndex = index);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      item.name??'--',
+                      // foodCategories[index],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: width * 0.04,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            )
+          ))
+            ,
+          ),
+        ],
       ),
     );
   }
@@ -104,11 +213,11 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
     );
   }
 
-  Widget _buildFavoritesList(double width) {
+  Widget _buildFoodList(double width,List<FoodModel> items) {
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: 10,
+      itemCount: items.length,
       itemBuilder: (context, index) {
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -126,22 +235,40 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => navigationPush(context, const DetailsOrderScreen()),
+              onTap: () {
+                navigationPush(context,  DetailsOrderScreen(item: items[index],));
+              },
               borderRadius: BorderRadius.circular(20),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(
-                        AssetsPath.food,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    ImageFood(
+                      url:getStorageUrl(items[index].image),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      foregroundColor:Colors.grey.shade400 ,
+                      backgroundColor:Colors.grey.shade200 ,
+
+                    )
+                    // ImageFood(
+                    //   url:getStorageUrl( "/media/items/313896434_457413909827066_6132971359909707631_n.jpg"??items[index].image),
+                    //   width: 100,
+                    //   height: 100,
+                    //   errorBuilder: Container(
+                    //     width: 100,
+                    //     height: 100,
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.grey.shade200,
+                    //       borderRadius: BorderRadius.circular(15),
+                    //     ),
+                    //     child: Icon(Icons.fastfood,
+                    //         color: Colors.grey.shade400, size: 40),
+                    //   ),
+                    // )
+                   ,
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -150,29 +277,68 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'وجبة ${index + 1}',
-                                    style: TextStyle(
-                                      fontSize: width * 0.045,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'وصف الوجبة ${index + 1}',
-                                    style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: width * 0.035,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                items[index].name??
+                                'وجبة ${index + 1}',
+                                style: TextStyle(
+                                  fontSize: width * 0.040,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.favorite),
-                                color: Colors.red,
-                                onPressed: () {},
+                      BlocBuilder<FavoritesCubit,FavoritesState>(
+                        buildWhen: (previous, current)=>context.read<FavoritesCubit>().buildItemsWhen(previous, current),
+                        builder: (context, state)=>
+
+                            state.maybeWhen(
+                                loading:()=>const LoadingDataView(),
+                                failure: (networkExceptions)=>IconButton(
+                                  icon: const Icon(Icons.refresh),
+                                  onPressed: () {
+                                    context.read<FavoritesCubit>().onRefresh(context);
+                                  },
+                                ),
+                                orElse: () {
+                                  bool isFavorite=context.read<FavoritesCubit>().checkFavourite(context,itemId:items[index].id);
+                                  return   IconButton(
+                                    icon:  Icon(
+                                        isFavorite?
+                                        Icons.favorite
+                                            : Icons.favorite_border
+                                    ),
+                                    color: Colors.red,
+                                    onPressed: () async {
+
+                                     await context.read<FavoriteCubit>().changeItemFavourite(context,itemId:items[index].id
+                                          ,favorite:isFavorite
+                                          ,onSuccess: ()=>
+                                          !isFavorite?
+                                              context.read<FavoritesCubit>().addFavourite(context,itemId:items[index].id )
+                                              :context.read<FavoritesCubit>().removeFavourite(context,itemId:items[index].id )
+                                      );
+
+                                    },
+                                  );
+                                }
+
+                            )
+
+
+                      ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.local_fire_department,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                size: width * 0.04,
+                              ),
+                              Text(
+                                '${items[index].calories??'--'}',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: width * 0.035,
+                                ),
                               ),
                             ],
                           ),
@@ -181,15 +347,28 @@ class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${10 + index} ريال',
+
+                                '${ items[index].price??'--'} ريال',
+                                // '${10 + index} ريال',
                                 style: TextStyle(
-                                  fontSize: width * 0.045,
+                                  fontSize: width * 0.035,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFF2D91C0),
                                 ),
                               ),
                               ElevatedButton(
                                 onPressed: () {
+
+                                  context.read<ItemCartCubit>().cartModel?.addToCart(ItemCartModel(
+                                      id: items[index].id,
+                                      item: items[index],
+                                      quantity: 1,
+                                      itemId:items[index].id,
+                                      deliveryDate: DateTime.now(),
+                                      notes: "",
+                                      extras: []
+                                  ));
+
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {

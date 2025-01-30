@@ -1,30 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maqsaf_app/constants/colors_constants.dart';
 import 'package:maqsaf_app/screens/details_order_screen.dart';
+import 'package:maqsaf_app/screens/favorite/cubits/favorite_cubit/favorite_cubit.dart';
+import 'package:maqsaf_app/screens/items/cubits/items_cubit/items_cubit.dart';
 import 'package:maqsaf_app/screens/shopping_screen.dart';
-import '../helpers/size_config.dart';
-import '../widgets/components.dart';
+import '../../constants/assets_path.dart';
+import '../../core/helpers/operation_file.dart';
+import '../../core/widgets/image/image_food.dart';
+import '../../helpers/size_config.dart';
+import '../../widgets/components.dart';
+import '../carts/cubits/item_cart_cubit/item_cart_cubit.dart';
+import '../carts/data/models/item_cart_model.dart';
+import '../items/data/models/food_model.dart';
+import 'cubits/favorites_cubit/favorites_cubit.dart';
+import 'data/models/favorite_model.dart';
 
-class OnlineOrderScreen extends StatefulWidget {
-  const OnlineOrderScreen({super.key});
+class MyFavoriteScreen extends StatefulWidget {
+  const MyFavoriteScreen({super.key});
 
   @override
-  State<OnlineOrderScreen> createState() => _OnlineOrderScreenState();
+  State<MyFavoriteScreen> createState() => _MyFavoriteScreenState();
 }
 
-class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
-  int selectedCategoryIndex = 0;
+class _MyFavoriteScreenState extends State<MyFavoriteScreen> {
   final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    context.read<FavoritesCubit>().init(context);
+    context.read<ItemsCubit>().init(context);
+    super.initState();
+  }
+  List<FoodModel> getFilteredFoods() {
 
-  final List<String> foodCategories = [
-    'الوجبات الرئيسية',
-    'المشروبات',
-    'الحلويات',
-    'المقبلات',
-    'السندويشات',
-    'العصائر',
-  ];
 
+    return context.read<ItemsCubit>().items.where((food) {
+
+      bool matchesFilters =
+      (context.read<FavoritesCubit>().items )
+          .any((item) => food.id==item.itemId);
+      return matchesFilters;
+    }).toList();
+  }
   @override
   Widget build(BuildContext context) {
     final height = SizeConfig.sizeHeight(context);
@@ -41,7 +58,16 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
               children: [
                 _buildAppBar(width),
                 Expanded(
-                  child: _buildFoodList(width),
+                  child:
+    BlocBuilder<FavoritesCubit,FavoritesState>(
+    buildWhen: (previous, current)=>context.read<FavoritesCubit>().buildItemsWhen(previous, current),
+    builder: (context, state)=>
+    context.read<FavoritesCubit>().buildItems(context, state,
+    BlocBuilder<ItemsCubit,ItemsState>(
+    buildWhen: (previous, current)=>context.read<ItemsCubit>().buildItemsWhen(previous, current),
+    builder: (context, state)=>
+    context.read<ItemsCubit>().buildItems(context, state,
+                  _buildFavoritesList(width,getFilteredFoods()))))),
                 ),
               ],
             ),
@@ -71,83 +97,32 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
           )
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header section
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 16,
-              bottom: 8,
-              right: 16,
-              left: 16,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    _buildIconButton(
-                        Icons.arrow_back, () => Navigator.pop(context)),
-                    const SizedBox(width: 16),
-                    Text(
-                      'اطلب مسبقاً',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: width * 0.05,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                _buildIconButton(
+                    Icons.arrow_back, () => Navigator.pop(context)),
+                const SizedBox(width: 16),
+                Text(
+                  'الوجبات المفضلة',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: width * 0.05,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                _buildIconButton(Icons.shopping_cart, () {
-                  navigationPush(context, const CartScreen());
-                }),
               ],
             ),
-          ),
+            _buildIconButton(Icons.shopping_cart_outlined, () {
+              navigationPush(context, const CartScreen());
 
-          SizedBox(height: 22),
-          Container(
-            height: 40,
-            margin: const EdgeInsets.only(bottom: 16),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: foodCategories.length,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemBuilder: (context, index) {
-                final isSelected = selectedCategoryIndex == index;
-                return GestureDetector(
-                  onTap: () => setState(() => selectedCategoryIndex = index),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Text(
-                      foodCategories[index],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: width * 0.04,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -167,11 +142,11 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
     );
   }
 
-  Widget _buildFoodList(double width) {
+  Widget _buildFavoritesList(double width,List<FoodModel> items) {
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: 15,
+      itemCount: items.length,
       itemBuilder: (context, index) {
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -189,23 +164,31 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => navigationPush(context, const DetailsOrderScreen()),
+              onTap: ()   =>navigationPush(context,  DetailsOrderScreen(item: items[index],)),
               borderRadius: BorderRadius.circular(20),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    ImageFood(
+                      url:getStorageUrl(items[index].image),
                       width: 100,
                       height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(Icons.fastfood,
-                          color: Colors.grey.shade400, size: 40),
+                      fit: BoxFit.cover,
+                      foregroundColor:Colors.grey.shade400 ,
+                      backgroundColor:Colors.grey.shade200 ,
+
                     ),
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(15),
+                    //   child: Image.asset(
+                    //     AssetsPath.food,
+                    //     width: 100,
+                    //     height: 100,
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -214,33 +197,56 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'وجبة ${index + 1}',
-                                style: TextStyle(
-                                  fontSize: width * 0.045,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    items[index].name??
+                                    'وجبة ${ items[index].id}',
+                                    style: TextStyle(
+                                      fontSize: width * 0.040,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    items[index].description??
+                                    'وصف الوجبة ${index + 1}',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: width * 0.035,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.local_fire_department,
+                                        color: const Color.fromARGB(255, 0, 0, 0),
+                                        size: width * 0.04,
+                                      ),
+                                      Text(
+                                        '${items[index].calories??'--'}',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: width * 0.035,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
                               ),
                               IconButton(
-                                icon: const Icon(Icons.favorite_border),
+                                icon: const Icon(Icons.favorite),
                                 color: Colors.red,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.fire_extinguisher_sharp,
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                                size: width * 0.04,
-                              ),
-                              Text(
-                                '198',
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: width * 0.035,
-                                ),
+                                onPressed: () {
+
+                                  context.read<FavoriteCubit>().changeItemFavourite(context,itemId:items[index].id
+                                  ,favorite:true
+                                      ,onSuccess: ()=>
+                                      context.read<FavoritesCubit>().onRefresh(context));
+
+                                },
                               ),
                             ],
                           ),
@@ -249,9 +255,10 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${10 + index} ريال',
+                                '${items[index].price??'--'} ريال',
+                                // '${10 + index} ريال',
                                 style: TextStyle(
-                                  fontSize: width * 0.045,
+                                  fontSize: width * 0.035,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xFF2D91C0),
                                 ),
@@ -261,6 +268,15 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
+                                      context.read<ItemCartCubit>().cartModel?.addToCart(ItemCartModel(
+                                          id: items[index].id,
+                                          item: items[index],
+                                          quantity: 1,
+                                          itemId:items[index].id,
+                                          deliveryDate: DateTime.now(),
+                                          notes: "",
+                                          extras: []
+                                      ));
                                       return Directionality(
                                         textDirection: TextDirection.rtl,
                                         child: Dialog(

@@ -11,7 +11,7 @@ class OrderModel {
   final int? id;
 
   @JsonKey(name: "student")
-  int? studentId;
+  String? student;
   List<ItemOrderModel>? items;
   @JsonKey(name: "total_price")
   String? totalPrice;
@@ -23,7 +23,7 @@ class OrderModel {
 
   OrderModel({
     this.id,
-    this.studentId,
+    this.student,
     this.items,
     this.totalPrice,
     this.status,
@@ -32,6 +32,26 @@ class OrderModel {
 
   });
 
+  String? get getArabicStatus{
+    switch(status?.toLowerCase()){
+      case "completed":
+        return "مكتمل";
+      case "canceled ":
+        return "ملغي";
+      case "pending ":
+        return "قيد الانتظار";
+
+      default:
+      return "معلق";
+    }
+  }
+  String? get getTitle{
+    String title='';
+    return null;
+    // for(ItemOrderModel item in items){
+    //   title+='${item.}'
+    // }
+  }
   factory OrderModel.fromJson( json) {
     return _$OrderModelFromJson(json);
   }

@@ -3,9 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 
-import '../utils/assets_manager.dart';
 import '../utils/color_manager.dart';
-import '../utils/string_manager.dart';
 
 
 

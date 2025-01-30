@@ -33,5 +33,17 @@ class FavoritesRepository {
       );
     }
   }
+  Future<ApiResponse<BaseModel>>  deleteItemFromFavorite(
+      {int? itemId,int? studentId}
+      )  async {
+    try {
+      final response = await _remoteDataSource.deleteItemFromFavorite(itemId,studentId);
+      return ApiResponse.success(response);
+    } catch (error) {
+      return ApiResponse.failure(
+        NetworkExceptions.getException(error),
+      );
+    }
+  }
 
 }

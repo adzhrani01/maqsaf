@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:maqsaf_app/core/dialogs/logout_dialog.dart';
 import 'package:maqsaf_app/core/helpers/spacing.dart';
+
+import '../screens/orders/data/models/order_model.dart';
 
 class CafeteriaOrder {
   final String id;
@@ -24,8 +28,9 @@ class CafeteriaOrder {
 }
 
 class CafeteriaOrdersWidget extends StatefulWidget {
-  const CafeteriaOrdersWidget({Key? key}) : super(key: key);
-
+  const CafeteriaOrdersWidget({Key? key, required this.items})
+      : super(key: key);
+  final List<OrderModel> items;
   @override
   State<CafeteriaOrdersWidget> createState() => _CafeteriaOrdersWidgetState();
 }
@@ -82,10 +87,13 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'pending':
+      case 'Pending':
         return Colors.amber;
       case 'completed':
+      case 'Completed':
         return Colors.green;
       case 'cancelled':
+      case 'Cancelled':
         return Colors.red;
       default:
         return Colors.grey;
@@ -95,10 +103,13 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
   String _getStatusText(String status) {
     switch (status) {
       case 'pending':
+      case 'Pending':
         return 'قيد الانتظار';
       case 'completed':
+      case 'Completed':
         return 'مكتمل';
       case 'cancelled':
+      case 'Cancelled':
         return 'ملغي';
       default:
         return status;
@@ -108,10 +119,13 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
   IconData _getStatusIcon(String status) {
     switch (status) {
       case 'pending':
+      case 'Pending':
         return Icons.access_time;
       case 'completed':
+      case 'Completed':
         return Icons.check_circle;
       case 'cancelled':
+      case 'Cancelled':
         return Icons.cancel;
       default:
         return Icons.error;
@@ -120,7 +134,9 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentOrder = orders[_currentIndex];
+    final currentOrder =
+        widget.items.length <= 0 ? null : widget.items[_currentIndex];
+    // final currentOrder = orders[_currentIndex];
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -151,7 +167,8 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'طلب #${currentOrder.orderNumber}',
+                                  'طلب #${currentOrder?.id ?? "ORD-00${_currentIndex + 1}"}',
+                                  // 'طلب #${currentOrder.orderNumber}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -163,19 +180,24 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                             horizontalSpace(10.w),
                             Chip(
                               avatar: Icon(
-                                _getStatusIcon(currentOrder.status),
+                                _getStatusIcon(currentOrder?.status ??
+                                    "pending".toLowerCase()),
                                 color: Colors.white,
                                 size: 18,
                               ),
                               label: Text(
-                                _getStatusText(currentOrder.status),
+                                _getStatusText(currentOrder?.status ??
+                                    "pending".toLowerCase()),
+                                // _getStatusText(currentOrder.status),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
                                 ),
                               ),
-                              backgroundColor:
-                                  _getStatusColor(currentOrder.status),
+                              backgroundColor: _getStatusColor(
+                                  currentOrder?.status ??
+                                      "pending".toLowerCase()),
+                              // _getStatusColor(currentOrder.status),
                             ),
                           ],
                         ),
@@ -185,11 +207,15 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                         children: [
                           const Icon(Icons.calendar_today, size: 16),
                           const SizedBox(width: 4),
-                          Text(currentOrder.date),
+                          Text(intl.DateFormat("dd/MM/yyyy")
+                              .format(currentOrder?.date ?? DateTime.now())),
+                          // Text(currentOrder.date),
                           const SizedBox(width: 16),
                           const Icon(Icons.access_time, size: 16),
                           const SizedBox(width: 4),
-                          Text(currentOrder.time),
+                          Text(intl.DateFormat.jm()
+                              .format(currentOrder?.date ?? DateTime.now())),
+                          // Text(currentOrder.time),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -200,14 +226,16 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      ...currentOrder.items.map((item) => Padding(
+                      ...(currentOrder?.items ?? []).map((item) => Padding(
+                            // ...currentOrder.items.map((item) => Padding(
                             padding:
                                 const EdgeInsets.only(right: 16, bottom: 4),
                             child: Row(
                               children: [
                                 const Icon(Icons.circle, size: 8),
                                 const SizedBox(width: 8),
-                                Text(item),
+                                Text("${item.item}"),
+                                // Text(item),
                               ],
                             ),
                           )),
@@ -215,7 +243,8 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
                       const Divider(),
                       const SizedBox(height: 8),
                       Text(
-                        'الإجمالي: ${currentOrder.total} ريال',
+                        'الإجمالي: ${currentOrder?.totalPrice ?? "--"} ريال',
+                        // 'الإجمالي: ${currentOrder.total} ريال',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -228,8 +257,11 @@ class _CafeteriaOrdersWidgetState extends State<CafeteriaOrdersWidget> {
             ),
             IconButton(
               icon: const Icon(Icons.chevron_right),
-              onPressed: _currentIndex < orders.length - 1 ? _goToNext : null,
-              color: _currentIndex < orders.length - 1
+              // onPressed: _currentIndex < orders.length - 1 ? _goToNext : null,
+              // color: _currentIndex < orders.length - 1
+              onPressed:
+                  _currentIndex < widget.items.length - 1 ? _goToNext : null,
+              color: _currentIndex < widget.items.length - 1
                   ? Colors.black
                   : Colors.grey,
             ),

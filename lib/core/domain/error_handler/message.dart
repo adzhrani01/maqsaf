@@ -42,6 +42,17 @@ class MessageApi{
      // return tr(LocaleKeys.done_delete);
     }
 
+    else if(text.contains("done_logout")){
+      return "تم تسجيل الخروج بنجاح";
+    }
+    else if(text.contains("refresh_token_successful")){
+      return "تم إعادة الاقتران بنجاح";
+    }
+    else if(text.contains("login_successful")){
+      return "تم تسجيل الدخول بنجاح";
+    }
+
+
 
 
 

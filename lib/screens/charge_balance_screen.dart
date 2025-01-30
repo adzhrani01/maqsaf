@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 import '../helpers/size_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/textfield.dart';
 
 class ChargeBalanceScreen extends StatefulWidget {
-  const ChargeBalanceScreen({super.key});
+  const ChargeBalanceScreen({super.key,  this.withBack=false});
+  final bool withBack ;
 
   @override
   State<ChargeBalanceScreen> createState() => _ChargeBalanceScreenState();
@@ -13,7 +16,14 @@ class ChargeBalanceScreen extends StatefulWidget {
 class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
   final List<String> amounts = ['10', '20', '50'];
   int selectedAmountIndex = -1;
+  final _formKey = GlobalKey<FormState>();
 
+  late TextEditingController balanceController =TextEditingController( );
+
+  @override
+  void initState() {
+    super.initState();
+  }
   Widget _buildAppBar(double width) {
     return Container(
       padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -41,6 +51,7 @@ class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
           child: Row(
             children: [
               Container(
+
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
@@ -81,7 +92,10 @@ class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
         itemBuilder: (context, index) {
           final isSelected = selectedAmountIndex == index;
           return GestureDetector(
-            onTap: () => setState(() => selectedAmountIndex = index),
+            onTap: () {
+              balanceController.text=amounts[index];
+              setState(() => selectedAmountIndex = index);
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               margin: const EdgeInsets.only(right: 12),
@@ -140,141 +154,150 @@ class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'حدد المبلغ',
-                                style: TextStyle(
-                                  color: const Color(0xFF15445A),
-                                  fontSize: width * 0.045,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildAmountSelector(width),
-                              const SizedBox(height: 16),
-                              const CustomTextfield(
-                                hintText: 'مبلغ آخر',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomButton(
-                                label: 'Pay with Apple Pay',
-                                onTap: () {},
-                                txtSize: width * 0.04,
-                                textColor: Colors.white,
-                                primaryColor: Colors.black,
-                              ),
-                              const SizedBox(height: 20),
-                              const Divider(height: 1),
-                              const SizedBox(height: 20),
-                              Text(
-                                'أو الدفع بالبطاقة',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: width * 0.04,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                'اسم حامل البطاقة',
-                                style: TextStyle(
-                                  color: const Color(0xFF15445A),
-                                  fontSize: width * 0.04,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const CustomTextfield(hintText: ''),
-                              const SizedBox(height: 16),
-                              Text(
-                                'رقم البطاقة',
-                                style: TextStyle(
-                                  color: const Color(0xFF15445A),
-                                  fontSize: width * 0.04,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const CustomTextfield(
-                                  hintText: 'xxxx xxxx xxxx xxxx'),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'تاريخ الانتهاء',
-                                          style: TextStyle(
-                                            color: const Color(0xFF15445A),
-                                            fontSize: width * 0.04,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        const CustomTextfield(
-                                            hintText: 'MM/YY'),
-                                      ],
-                                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'حدد المبلغ',
+                                  style: TextStyle(
+                                    color: const Color(0xFF15445A),
+                                    fontSize: width * 0.045,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'CVV',
-                                          style: TextStyle(
-                                            color: const Color(0xFF15445A),
-                                            fontSize: width * 0.04,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        const CustomTextfield(hintText: '***'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                const SizedBox(height: 16),
+                                _buildAmountSelector(width),
+                                const SizedBox(height: 16),
+                                 CustomTextfield(
+                                  controller: balanceController,
+                                  hintText: 'مبلغ آخر',
+                                     validator:  (String? val) {
+                                       if (val!.trim().isEmpty) return "هذا الحقل مطلوب";
+                                       if (num.tryParse(val??'')==null) return "ادخال غير صالح";
+                                       return null;
+                                     }
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomButton(
+                                  label: 'Pay with Apple Pay',
+                                  onTap: () {},
+                                  txtSize: width * 0.04,
+                                  textColor: Colors.white,
+                                  primaryColor: Colors.black,
+                                ),
+                                const SizedBox(height: 20),
+                                const Divider(height: 1),
+                                const SizedBox(height: 20),
+                                Text(
+                                  'أو الدفع بالبطاقة',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: width * 0.04,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Text(
+                                  'اسم حامل البطاقة',
+                                  style: TextStyle(
+                                    color: const Color(0xFF15445A),
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const CustomTextfield(hintText: ''),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'رقم البطاقة',
+                                  style: TextStyle(
+                                    color: const Color(0xFF15445A),
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const CustomTextfield(
+                                    hintText: 'xxxx xxxx xxxx xxxx'),
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'تاريخ الانتهاء',
+                                            style: TextStyle(
+                                              color: const Color(0xFF15445A),
+                                              fontSize: width * 0.04,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const CustomTextfield(
+                                              hintText: 'MM/YY'),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'CVV',
+                                            style: TextStyle(
+                                              color: const Color(0xFF15445A),
+                                              fontSize: width * 0.04,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const CustomTextfield(hintText: '***'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -283,7 +306,17 @@ class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
                 padding: const EdgeInsets.all(24),
                 child: CustomButton(
                   label: 'إضافة رصيد',
-                  onTap: () {},
+                  onTap: () {
+                    if((_formKey.currentState?.validate()??false))
+                      context.read<UserCubit>().updateStudents(context,
+                          withBack: widget.withBack,
+                          balance: "${
+                              (num.tryParse(context.read<UserCubit>().user?.balance??"")??0)+
+                              (num.tryParse(balanceController.value.text)??0)
+                          }"
+                      );
+
+                  },
                   txtSize: width * 0.04,
                 ),
               ),

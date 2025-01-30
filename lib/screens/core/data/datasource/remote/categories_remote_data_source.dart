@@ -23,7 +23,7 @@ class CategoriesRemoteDataSource  {
         hasToken: true);
 
     return BaseModel.fromJson(
-      response,
+    {"result":response},
           (json) => BaseModels.fromJson(json,ItemModel.fromJson),
     );
   }

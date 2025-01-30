@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -8,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:maqsaf_app/core/widgets/widgets_Informative/error_view.dart';
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 
 import '../../../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../../../core/widgets/shimmer/load_circle_List.dart';
 import '../../../../core/helpers/response_helper.dart';
 import '../../../../core/widgets/widgets_Informative/empty_data_view.dart';
+import '../../../../core/widgets/widgets_Informative/loading_data_view.dart';
 import '../../data/models/order_model.dart';
 import '../../domain/repositories/orders_repository.dart';
 
@@ -28,7 +29,10 @@ class OrdersCubit extends Cubit<OrdersState>  {
 
 
   List<OrderModel> items=[];
+  List<OrderModel> itemsByFilter=[];
 
+
+  int? selectedIndex;
 
 
 
@@ -40,7 +44,7 @@ class OrdersCubit extends Cubit<OrdersState>  {
 
 
   void init(BuildContext context)  {
-
+    selectedIndex=null;
     getAllCarts(context);
 
   }
@@ -57,16 +61,17 @@ void onRefresh(BuildContext context){
 
     emit(const OrdersState.loading(),);
 
-    final response = await repository.getAllOrders( );
+    final response = await repository.getAllOrders( studentId:  context.read<UserCubit>().user?.id);
     response.when(
       success: (data) async {
         List list = data.result.list;
 
         items.addAll(list.whereType());
-        if(items.isEmpty)
-          emit(OrdersState.empty( data.message),);
-         else
-        emit(OrdersState.success(items, data.message),);
+        filter();
+        // if(items.isEmpty)
+        //   emit(OrdersState.empty( data.message),);
+        //  else
+        // emit(OrdersState.success(items, data.message),);
       },
       failure: (networkException) {
         emit(OrdersState.failure(networkException),);
@@ -75,6 +80,33 @@ void onRefresh(BuildContext context){
       },
     );
   }
+  filter() async {
+    itemsByFilter.clear();
+
+    items.forEach((element) {
+      if(selectedIndex==null)
+        itemsByFilter.add(element);
+      else{
+        if(selectedIndex==0&&(element.orderType?.contains("Normal")??false))
+          itemsByFilter.add(element);
+        else if(selectedIndex!=0&&!(element.orderType?.contains("Normal")??false))
+          itemsByFilter.add(element);
+      }
+
+
+    });
+    if(itemsByFilter.isEmpty)
+      emit(OrdersState.empty( ""),);
+     else
+    emit(OrdersState.success(itemsByFilter,""),);
+  }
+
+  void changeIndex(int? index){
+    selectedIndex=index;
+    filter();
+  }
+
+
 
 
   ///buildItemsPage
@@ -93,8 +125,8 @@ void onRefresh(BuildContext context){
 
   Widget buildItems(BuildContext context,OrdersState state,Widget child)=>
       state.maybeWhen(
-          loading:()=>const LoadCircleList(itemCount:5),
-          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,),
+          loading:()=>const LoadingDataView(),
+          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,onRetry:()=>onRefresh(context)),
           empty:(_)=>EmptyDataView(),
           orElse: () =>child
       );

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maqsaf_app/constants/assets_path.dart';
+import 'package:maqsaf_app/constants/colors_constants.dart';
+import 'package:maqsaf_app/screens/carts/data/models/cart_model.dart';
 import 'package:maqsaf_app/screens/charge_balance_screen.dart';
 import 'package:maqsaf_app/screens/chatgpt_screen.dart';
 import 'package:maqsaf_app/screens/home_page.dart';
-import 'package:maqsaf_app/screens/my_favorite_screen.dart';
+import 'package:maqsaf_app/screens/favorite/my_favorite_screen.dart';
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 import 'package:maqsaf_app/screens/profile/profile_screen.dart';
+
+import 'carts/cubits/item_cart_cubit/item_cart_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,7 +62,11 @@ class _HomeScreenState extends State<HomeScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _controller.forward();
+    context.read<ItemCartCubit>().cartModel=CartModel(
+      studentId:  context.read<UserCubit>().user?.id,
+          items: []
+    );
+        _controller.forward();
   }
 
   @override
@@ -269,7 +279,8 @@ class CenterFloatingButton extends StatelessWidget {
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isSelected ? _buttonEndColor : Colors.black87,
+              color: isSelected ? _buttonEndColor : AppColor.secondaryColor,
+              // color: isSelected ? _buttonEndColor : Colors.black87,
             ),
             child: Center(
               child: Image.asset(

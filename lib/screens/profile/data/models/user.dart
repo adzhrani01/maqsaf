@@ -7,6 +7,7 @@ part 'user.freezed.dart';
 part 'user.g.dart';
 
 @freezed
+// @JsonSerializable(explicitToJson: true)
 class UserModel with _$UserModel {
   const UserModel._();
 

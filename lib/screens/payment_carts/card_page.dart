@@ -1,4 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:maqsaf_app/core/helpers/extensions.dart';
+import 'package:maqsaf_app/screens/payment_carts/cubits/payment_carts_cubit/payment_carts_cubit.dart';
+import 'package:maqsaf_app/screens/payment_carts/data/models/payment_cart_model.dart';
+
+import '../../constants/colors_constants.dart';
+import '../../helpers/size_config.dart';
+import '../../widgets/components.dart';
+import 'cubits/payment_cart_cubit/payment_cart_cubit.dart';
 
 class SavedCardsPage extends StatefulWidget {
   const SavedCardsPage({super.key});
@@ -254,10 +266,17 @@ class _AddCardModalState extends State<AddCardModal>
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
+
                             decoration: const InputDecoration(
                               labelText: 'اسم حامل البطاقة',
                               border: OutlineInputBorder(),
                             ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'الرجاء إدخال اسم حامل البطاقة';
+                                }
+                                return null;
+                              },
                             onChanged: (value) {
                               setState(() {
                                 cardHolderName = value;
@@ -278,11 +297,29 @@ class _AddCardModalState extends State<AddCardModal>
                                       expiryDate = value;
                                     });
                                   },
+                                  validator: (value) {
+                                    if (expiryDate.isEmpty) {
+                                      return 'الرجاء إدخال تاريخ الانتهاء';
+                                    }
+
+                                   if(intl.DateFormat("MM/yy").tryParse(expiryDate)==null
+                                   &&intl.DateFormat("MM\\yy").tryParse(expiryDate)==null
+                                   ) return 'الرجاء إدخال تاريخ صحيح';
+
+                                    if(
+                                    (intl.DateFormat("MM/yy").tryParse(expiryDate)?.isBefore(DateTime.now())??true)
+                                    &&(intl.DateFormat("MM\\yy").tryParse(expiryDate)?.isBefore(DateTime.now())??true)
+
+                                    )
+                                      return 'الرجاء إدخال تاريخ صالح';
+                                    return null;
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                     labelText: 'CVV',
                                     border: OutlineInputBorder(),
@@ -290,8 +327,18 @@ class _AddCardModalState extends State<AddCardModal>
                                   onChanged: (value) {
                                     setState(() {
                                       cvv = value;
+
                                     });
                                   },
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'الرجاء إدخال تاريخ الانتهاء';
+                                      }
+                                      if(value.length!=3) return 'الرجاء إدخال رقم صالح';
+
+                                      return null;
+                                    },
+
                                   onTap: () {
                                     if (!isCardFlipped) _flipCard();
                                   },
@@ -303,7 +350,18 @@ class _AddCardModalState extends State<AddCardModal>
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.pop(context);
+                                context.read<PaymentCartCubit>().createPaymentCart(context
+                                ,paymentCart: PaymentCartModel(
+                                      name: cardHolderName,
+                                      number: cardNumber,
+                                      cvv:cvv,
+                                      isDefault: false,
+                                      expireDate:
+                                      intl.DateFormat("MM/yy").tryParse(expiryDate)==null?
+                                          intl.DateFormat("MM\\yy").tryParse(expiryDate):
+                                      intl.DateFormat("MM/yy").tryParse(expiryDate)
+                                    ));
+                                // Navigator.pop(context);
                               }
                             },
                             child: Container(
@@ -338,6 +396,7 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
       expiryDate: '12/25',
       cardType: 'فيزا',
       color: Colors.blue,
+      isDefault: true,
     ),
     CreditCard(
       cardNumber: '**** **** **** 5678',
@@ -345,12 +404,17 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
       expiryDate: '09/24',
       cardType: 'ماستر كارد',
       color: Colors.orange,
+      isDefault: false,
     ),
   ];
 
   String selectedFilter = 'الكل';
   List<String> filters = ['الكل', 'فيزا', 'ماستر كارد', 'أمريكان إكسبرس'];
-
+  @override
+  void initState() {
+    context.read<PaymentCartsCubit>().init(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -447,21 +511,159 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
                 ),
               ),
 
+              //ListView.builder(
+              //                               itemCount: savedCards.length,
+              //                               itemBuilder: (context, index) {
+              //                                 final card = savedCards[index];
+              //                                 if (selectedFilter == 'الكل' ||
+              //                                     selectedFilter == card.cardType) {
+              //                                   return Card3D(
+              //                                     child: CreditCardWidget(card: card),
+              //                                     onTap: () {},
+              //                                   );
+              //                                 }
+              //                                 return const SizedBox.shrink();
+              //                               },
+              //                             )
               // Cards List
               Expanded(
-                child: ListView.builder(
-                  itemCount: savedCards.length,
-                  itemBuilder: (context, index) {
-                    final card = savedCards[index];
-                    if (selectedFilter == 'الكل' ||
-                        selectedFilter == card.cardType) {
-                      return Card3D(
-                        child: CreditCardWidget(card: card),
-                        onTap: () {},
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
+                child:  BlocBuilder<PaymentCartsCubit,PaymentCartsState>(
+                    buildWhen: (previous, current)=>context.read<PaymentCartsCubit>().buildItemsWhen(previous, current),
+                    builder: (context, state)=>
+                        context.read<PaymentCartsCubit>().buildItems(context, state,
+                            ListView.builder(
+                              itemCount: context.read<PaymentCartsCubit>().items.length,
+                              itemBuilder: (context, index) {
+                                final card = context.read<PaymentCartsCubit>().items[index];
+                                final savedCard=savedCards[Random().nextInt(savedCards.length-1)];
+                                if (selectedFilter == 'الكل' ||
+                                    selectedFilter == card.type||
+                                    selectedFilter == savedCard.cardType
+                                ) {
+                                  return Card3D(
+                                    child: CreditCardWidget(card: CreditCard(cardNumber:
+                                    card.number??""
+                                        , cardHolderName: card.name??"",
+                                        expiryDate:intl.DateFormat("MM/yy").format( card?.expireDate??DateTime.now()),
+                                         isDefault: card.isDefault??false,
+                                         cardType: card.type??savedCard.cardType
+                                        , color: savedCard.color)),
+                                    onTap: () {
+                                      final width = SizeConfig.sizeWidth(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context1) {
+                                          return Directionality(
+                                            textDirection: TextDirection.rtl,
+                                            child: Dialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                              child: Container(
+                                                padding: const EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    // Header
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding: const EdgeInsets.all(8),
+                                                          decoration: BoxDecoration(
+                                                            color:
+                                                            AppColor.primaryColor.withOpacity(0.1),
+                                                            borderRadius: BorderRadius.circular(12),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.verified_outlined,
+                                                            color: AppColor.primaryColor,
+                                                            size: width * 0.06,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 12),
+                                                        Text(
+                                                          'اختيار كبطاقة افتراضية',
+                                                          style: TextStyle(
+                                                            fontSize: width * 0.05,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const Divider(height: 30),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context1);
+
+                                                            },
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: AppColor.primaryColor
+                                                                  .withOpacity(0.1),
+                                                              foregroundColor: AppColor.primaryColor,
+                                                              elevation: 0,
+                                                              padding: const EdgeInsets.symmetric(
+                                                                  vertical: 12),
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(8),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'الغاء',
+                                                              style: TextStyle(fontSize: width * 0.04),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              context1.pop();
+                                                              context.read<PaymentCartCubit>().setDefault(context,
+                                                                  paymentCartId:card.id,
+                                                                onSuccess: ()=>context.read<PaymentCartsCubit>().onRefresh(context)
+                                                              );
+                                                            },
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: AppColor.primaryColor,
+                                                              padding: const EdgeInsets.symmetric(
+                                                                  vertical: 12),
+                                                              shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(8),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'تأكيد',
+                                                              style: TextStyle(
+                                                                fontSize: width * 0.04,
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+
+                                    },
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            ))
                 ),
               ),
             ],
@@ -546,6 +748,7 @@ class CreditCard {
   final String cardHolderName;
   final String expiryDate;
   final String cardType;
+  final bool isDefault;
   final Color color;
 
   CreditCard({
@@ -553,6 +756,7 @@ class CreditCard {
     required this.cardHolderName,
     required this.expiryDate,
     required this.cardType,
+    required this.isDefault,
     required this.color,
   });
 }
@@ -593,6 +797,14 @@ class CreditCardWidget extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Visibility(
+                  visible: card.isDefault,
+                  child: const Icon(
+                    Icons.verified_outlined,
+                    color: Colors.white,
+                    size: 32,
                   ),
                 ),
                 const Icon(

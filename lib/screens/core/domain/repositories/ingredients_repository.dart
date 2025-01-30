@@ -3,7 +3,6 @@ import '../../../../../core/data/datasource/remote/api_response.dart';
 
 import '../../../../../core/data/models/base_model.dart';
 import '../../../../../core/domain/error_handler/network_exceptions.dart';
-import '../../data/datasource/remote/categories_remote_data_source.dart';
 import '../../data/datasource/remote/ingredients_remote_data_source.dart';
 
 class IngredientsRepository {

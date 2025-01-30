@@ -1,6 +1,8 @@
-import 'dart:ffi';
+
 
 // isAdmin(String? accountType)=> accountType=='Admin'||accountType==null;
+
+import 'package:intl/intl.dart';
 
 bool detectLang({required String text}) {
   // String pattern = r'^(?:[a-zA-Z]|\P{L})+$';
@@ -12,14 +14,14 @@ String formatText(dynamic value) {
  if(value is String)
    return value;
  else if(value is DateTime)
-   return value.toString();
-   // return DateFormat('dd MMM, yyyy').format(value as DateTime);
+   // return value.toString();
+   return DateFormat('dd MMM, yyyy').format(value);
  else if(value is Enum)
    return formatEnum(value);
  else if(value is int)
    return value.toString();
  else if(value is double)
-   return (value as double).toStringAsFixed(2);
+   return (value).toStringAsFixed(2);
  else
    return 'Unknown';
   // switch(value){

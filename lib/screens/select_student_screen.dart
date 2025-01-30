@@ -7,7 +7,9 @@ import 'package:maqsaf_app/screens/profile/data/models/user.dart';
 
 import '../constants/assets_path.dart';
 import '../constants/colors_constants.dart';
+import '../core/dialogs/logout_dialog.dart';
 import '../core/helpers/spacing.dart';
+import '../core/utils/color_manager.dart';
 import '../core/widgets/image/image_user.dart';
 import '../helpers/size_config.dart';
 import '../widgets/components.dart';
@@ -32,9 +34,24 @@ class SelectStudentScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Image.asset(AssetsPath.logo),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildIconButton(Icons.logout_rounded, () {
+                    showModalBottomSheet(
+                        backgroundColor: ColorManager.whiteColor,
+                        isScrollControlled: true,
+                        enableDrag: true,
+                        isDismissible: false,
+                        context: context,
+                        builder: (context) => LogoutDialog());
+                  }),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Image.asset(AssetsPath.logo),
+                  ),
+
+                ],
               ),
               SizedBox(height: height * 0.15),
               Align(
@@ -114,6 +131,24 @@ class SelectStudentScreen extends StatelessWidget {
       ),
     );
   }
+   Widget _buildIconButton(IconData icon, VoidCallback onTap) {
+     return GestureDetector(
+       onTap: onTap,
+       child: Padding(
+         padding: const EdgeInsets.all(8.0),
+         child: Container(
+           padding: const EdgeInsets.all(8),
+           decoration: BoxDecoration(
+             color: Colors.white.withOpacity(0.2),
+             borderRadius: BorderRadius.circular(12),
+             border: Border.all(color: Colors.white.withOpacity(0.1)),
+           ),
+           child: Icon(icon, color: Colors.white, size: 22),
+         ),
+       ),
+     );
+   }
+
 }
 
 

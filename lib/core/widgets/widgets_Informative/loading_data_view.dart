@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/colors_constants.dart';
 import '../../utils/color_manager.dart';
 
 
@@ -21,7 +22,8 @@ class LoadingDataView extends StatelessWidget {
         ),
         child:
         const CircularProgressIndicator(
-          color: ColorManager.primaryColor,
+          color: AppColor.primaryColor,
+          // color: ColorManager.primaryColor,
         )
         // LoadingAnimationWidget.discreteCircle(
         //     secondRingColor: AppColors.secondary,

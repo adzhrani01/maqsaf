@@ -3,6 +3,28 @@ import 'package:intl/intl.dart' as intl;
 
 import '../utils/string_manager.dart';
 class DateFormatHelper{
+  static String formatTimeOrder(DateTime dateTime, String locale) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays == 0) {
+     return "اليوم";
+    } else if (difference.inDays == 1) {
+      if(now.isBefore(dateTime))
+      return StringManager.dateYesterday;
+      else
+        return "غداً";
+    }
+    // else if (difference.inDays < 7) {
+    //   return intl.DateFormat.EEEE(locale).format(dateTime); // Name of the day (e.g., Monday)
+    // }
+    // else if(dateTime.hour>0) {
+    //   return intl.DateFormat.yMMMMd(locale).add_jm().format(dateTime); // Full date format
+    // }
+    else {
+      return intl.DateFormat.yMMMMd(locale).format(dateTime); // Full date format
+    }
+  }
   static String formatTime(DateTime dateTime, String locale) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);

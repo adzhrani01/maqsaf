@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:maqsaf_app/screens/payment_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maqsaf_app/screens/carts/cubits/item_cart_cubit/item_cart_cubit.dart';
+import 'package:maqsaf_app/screens/items/data/models/food_model.dart';
+import 'package:maqsaf_app/screens/payment_carts/payment_screen.dart';
 import 'package:maqsaf_app/screens/shopping_screen.dart';
 
-import '../constants/assets_path.dart';
 import '../constants/colors_constants.dart';
+import '../core/helpers/operation_file.dart';
 import '../helpers/size_config.dart';
 import '../widgets/components.dart';
 import '../widgets/custom_button.dart';
+import 'carts/data/models/item_cart_model.dart';
 
 class DetailsOrderScreen extends StatefulWidget {
-  const DetailsOrderScreen({super.key});
-
+  const DetailsOrderScreen({super.key, this.item});
+  final FoodModel? item;
   @override
   State<DetailsOrderScreen> createState() => _DetailsOrderScreenState();
 }
@@ -24,6 +28,7 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
   List<bool> selectedExtras = [false, false, false];
 
   DateTime selectedDateValue = DateTime.now();
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -80,7 +85,36 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
               children: [
                 _buildAppBar(context, width),
                 const SizedBox(height: 10),
-                Image.asset(AssetsPath.food, height: height * 0.25),
+                Image.network(
+                    getStorageUrl( widget.item?.image)??''
+                ,height: height * 0.25,
+                  errorBuilder: (context,_,__)=>
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 100,
+                          height: height * 0.25,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Icon(Icons.fastfood,
+                              color: Colors.grey.shade400, size:  height * 0.10, ),
+                                        ),
+                      )),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: ImageFood(
+                //     url:getStorageUrl( "/media/items/313896434_457413909827066_6132971359909707631_n.jpg"??widget.item?.image),
+                //     width: 100,
+                //     height: height * 0.25,
+                //     fit: BoxFit.cover,
+                //     foregroundColor:Colors.grey.shade400 ,
+                //     backgroundColor:Colors.grey.shade200 ,
+                //
+                //   ),
+                // ),
+                // Image.asset(AssetsPath.food, height: height * 0.25),
                 const SizedBox(height: 20),
                 _buildDetailsSection(context, height, width),
               ],
@@ -150,6 +184,7 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
+            widget.item?.name??
             'ساندويتش تونه',
             style: TextStyle(
               color: Colors.black,
@@ -191,6 +226,7 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
 
   Widget _buildDescription(double width) {
     return Text(
+      widget.item?.description??
       'مناسبة لوجبة الغداء لو كان الطفل يظل وقت طويل خارج المنزل عبارة عن قطع الدجاج المقرمشة مع البروكلي المسلوق وملعقة مايونيز...',
       style: TextStyle(color: Colors.grey, fontSize: width * 0.04),
     );
@@ -490,7 +526,7 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '${19 * quantity} ر.س',
+                                    '${(num.tryParse("${widget.item?.price}")??19) * quantity} ر.س',
                                     style: TextStyle(
                                       fontSize: width * 0.045,
                                       fontWeight: FontWeight.bold,
@@ -508,6 +544,17 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       Navigator.pop(context);
+                                      // context.read<ItemCartCubit>().createItemCarts(context,
+                                      // );
+                                      context.read<ItemCartCubit>().cartModel?.items?.add(ItemCartModel(
+                                          id: widget.item?.id,
+                                          item: widget.item,
+                                          quantity: quantity,
+                                          itemId:widget.item?.id,
+                                          deliveryDate: selectedDateValue,
+                                          notes: _notesController.value.text,
+                                          extras: extras.where((e)=>selectedExtras[extras.indexOf(e)]).toList()
+                                      ));
                                       navigationPush(
                                           context, const CartScreen());
                                     },
@@ -534,7 +581,20 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                       navigationPush(
-                                          context, const PaymentScreen());
+                                          context,  PaymentScreen(
+                                        items: [
+                                          ItemCartModel(
+                                              id: widget.item?.id,
+                                              item: widget.item,
+                                              quantity: quantity,
+                                              itemId:widget.item?.id,
+                                              deliveryDate: selectedDateValue,
+                                              notes: _notesController.value.text,
+                                              extras: extras.where((e)=>selectedExtras[extras.indexOf(e)]).toList()
+                                          )
+
+                                        ],
+                                      ));
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.primaryColor,
@@ -570,7 +630,8 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
         Expanded(
           flex: 2,
           child: CustomButton(
-            label: '${19 * quantity} س.ر',
+            label: '${widget.item?.price??"--"} س.ر',
+            // label: '${19 * quantity} س.ر',
             onTap: () {},
             primaryColor: AppColor.green,
             txtSize: width * 0.04,

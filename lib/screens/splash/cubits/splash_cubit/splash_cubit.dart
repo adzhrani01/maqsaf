@@ -7,7 +7,6 @@ import 'package:maqsaf_app/screens/login/login_screen.dart';
 import '../../../../../core/data/datasource/configuration/data_configuration.dart';
 import '../../../../../core/data/datasource/storage/app_storage.dart';
 import '../../../../widgets/components.dart';
-import '../../../core/cubits/auth_cubit/auth_cubit.dart';
 import '../../../profile/cubits/user_cubit/user_cubit.dart';
 
 

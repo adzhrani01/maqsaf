@@ -1,6 +1,8 @@
 
 
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import '../../../../../../core/data/models/base_model.dart';
 import '../../../../../../core/domain/services/api_service.dart';
 import '../../../../../../core/utils/app_url.dart';
@@ -19,6 +21,7 @@ class AuthRemoteDataSource  {
         body: {
           "email": email,
           "password": password,
+          "firebase_token": await FirebaseMessaging.instance.getToken(),
         },
         hasToken: false);
 

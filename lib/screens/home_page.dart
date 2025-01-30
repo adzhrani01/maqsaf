@@ -3,17 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maqsaf_app/constants/assets_path.dart';
 import 'package:maqsaf_app/core/widgets/image/image_user.dart';
-import 'package:maqsaf_app/screens/card_page.dart';
+import 'package:maqsaf_app/screens/notification/notification_screen.dart';
+import 'package:maqsaf_app/screens/payment_carts/card_page.dart';
 import 'package:maqsaf_app/screens/charge_balance_screen.dart';
 import 'package:maqsaf_app/screens/daily_limit_screeen.dart';
-import 'package:maqsaf_app/screens/food_removed_screen.dart';
-import 'package:maqsaf_app/screens/online_order_screen.dart';
+import 'package:maqsaf_app/screens/deleted_foods/food_removed_screen.dart';
+import 'package:maqsaf_app/screens/items/online_order_screen.dart';
 import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
-import 'package:maqsaf_app/screens/purchase_operation_screen.dart';
+import 'package:maqsaf_app/screens/orders/purchase_operation_screen.dart';
 import 'package:maqsaf_app/screens/select_student_screen.dart';
+import 'package:maqsaf_app/screens/shopping_screen.dart';
 import 'package:maqsaf_app/widgets/actionCard.dart';
 import 'package:maqsaf_app/widgets/components.dart';
 import 'package:maqsaf_app/widgets/orderr.dart';
+
+import 'orders/cubits/carts_cubit/orders_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +27,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<OrdersCubit>().init(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -74,16 +83,34 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.menu,
-                                          color: Colors.white),
-                                      onPressed: () {
-                                        navigationPush(
-                                            context, SelectStudentScreen());
-                                      },
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.menu,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            navigationPush(
+                                                context, SelectStudentScreen());
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.notifications,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            navigationPush(
+                                                context, NotificationScreen());
+                                          },
+                                        ),
+
+                                      ],
                                     ),
-                                    Container()
+
+                                    _buildIconButton(Icons.shopping_cart, () {
+                                      navigationPush(context, const CartScreen());
+                                    }),
+                                    // Container()
                                   ],
                                 ),
                               ),
@@ -184,7 +211,13 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          CafeteriaOrdersWidget(),
+                          BlocBuilder<OrdersCubit,OrdersState>(
+                              buildWhen: (previous, current)=>context.read<OrdersCubit>().buildItemsWhen(previous, current),
+                              builder: (context, state)=>
+                                  context.read<OrdersCubit>().buildItems(context, state,
+                                      CafeteriaOrdersWidget(items:context.read<OrdersCubit>().items))
+                          )
+                         ,
                         ],
                       ),
                     ),
@@ -293,6 +326,21 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+Widget _buildIconButton(IconData icon, VoidCallback onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Icon(icon, color: Colors.white, size: 22),
+    ),
+  );
+}
+
 Widget _buildGridMenu(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -306,7 +354,7 @@ Widget _buildGridMenu(BuildContext context) {
         ActionCard(
           icon: AssetsPath.wallet,
           label: 'شحن رصيد',
-          onTap: () => navigationPush(context, const ChargeBalanceScreen()),
+          onTap: () => navigationPush(context, const ChargeBalanceScreen(withBack: true,)),
         ),
         ActionCard(
           icon: AssetsPath.online_order,

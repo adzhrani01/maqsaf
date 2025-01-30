@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -13,6 +12,9 @@ import '../../../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../../../core/widgets/shimmer/load_circle_List.dart';
 import '../../../../core/helpers/response_helper.dart';
 import '../../../../core/widgets/widgets_Informative/empty_data_view.dart';
+import '../../../../core/widgets/widgets_Informative/loading_data_view.dart';
+import '../../../items/cubits/items_cubit/items_cubit.dart';
+import '../../../profile/cubits/user_cubit/user_cubit.dart';
 import '../../data/models/favorite_model.dart';
 
 import '../../domain/repositories/favorites_repository.dart';
@@ -75,6 +77,24 @@ void onRefresh(BuildContext context){
       },
     );
   }
+  removeFavourite(BuildContext context,{required int? itemId, int? studentId,}){
+    studentId??=  context.read<UserCubit>().user?.id;
+    items.removeWhere((e)=>e.itemId==itemId&&studentId==studentId);
+    context.read<ItemsCubit>().onRefresh(context);
+    emit(const FavoritesState.notify());
+  }
+  addFavourite(BuildContext context,{required int? itemId, int? studentId,}){
+    studentId??=  context.read<UserCubit>().user?.id;
+    if(!items.any((e)=>e.itemId==itemId&&studentId==studentId))
+      items.add(FavoriteModel(itemId: itemId,studentId: studentId));
+    context.read<ItemsCubit>().onRefresh(context);
+    emit(const FavoritesState.notify());
+  }
+  checkFavourite(BuildContext context,{required int? itemId, int? studentId,}){
+    studentId??=  context.read<UserCubit>().user?.id;
+    return (items.any((e)=>e.itemId==itemId&&studentId==studentId));
+
+  }
 
 
   ///buildItemsPage
@@ -93,8 +113,8 @@ void onRefresh(BuildContext context){
 
   Widget buildItems(BuildContext context,FavoritesState state,Widget child)=>
       state.maybeWhen(
-          loading:()=>const LoadCircleList(itemCount:5),
-          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,),
+          loading:()=>const LoadingDataView(),
+          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,onRetry:()=>onRefresh(context)),
           empty:(_)=>EmptyDataView(),
           orElse: () =>child
       );

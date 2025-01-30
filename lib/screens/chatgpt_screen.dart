@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/assets_path.dart';
-import 'chat_gpt/chatgpt_voice_screen.dart';
-
+import 'home_screen.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 class ChatgptScreen extends StatefulWidget {
   const ChatgptScreen({super.key});
 
@@ -20,14 +20,99 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
   final String welcomeMessage =
       'مرحباً بك! كيف يمكنني مساعدتك اليوم؟ يمكنني تقديم نصائح حول الطعام والتغذية السليمة، واقتراح وجبات صحية، والإجابة عن استفساراتك المتعلقة بالمقصف.';
 
+  // Future<void> test() async {
+  //
+  //   final model = GenerativeModel(
+  //   model: 'gemini-1.5-flash',
+  //   apiKey: "AIzaSyCCQ6WTEL9ztkYZ9IAWcGoVmTZfMgceWko",
+  //   );
+  //   final prompt = 'لمتى يمكنني استخدامك  ';
+  //   // final prompt = 'Write a story about a magic backpack.';
+  //
+  //   final response = await model.generateContent([Content.text(prompt)]);
+  //   print("response.text");
+  //   print(response.text);
+  //
+  // }
+  GenerativeModel? model;
+  Future<void> init() async {
+     model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: "AIzaSyDob9CbYcZO0xNWn7N3p_yhlArbSqiqDrY",
+    );
+     isLoading=false;
+  }
+bool isLoading=false;
+
+
+  Future<void> _sendMessageAi(String message)async {
+if(isLoading) return;
+    if (message.trim().isEmpty) return;
+
+    setState(() {
+      _messages.add({
+        'isUser': true,
+        'message': message,
+        'timestamp': DateTime.now(),
+      });
+
+      _showSuggestions = false;
+      _messages.add({
+        'isUser': false,
+        'message': "جاري التحميل ..",
+        'timestamp': DateTime.now(),
+      });
+      isLoading=true;
+    });
+
+    _messageController.clear();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+    try{
+      final response = await model?.generateContent([Content.text(message)]);
+      _messages.removeLast();
+      _messages.add({
+
+        'isUser': false,
+        'message': response?.text??"",
+        'timestamp': DateTime.now(),
+      });
+    }catch(e){
+      _messages.removeLast();
+      _messages.add({
+        'isWrong': true,
+        'isUser': false,
+        'message': 'حدث خطأ، حاول مرة أخرى❗️',
+        'timestamp': DateTime.now(),
+      });
+    }finally{
+    isLoading=false;
+  }
+    setState(() {});
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _messages.add({
+
       'isUser': false,
       'message': welcomeMessage,
       'timestamp': DateTime.now(),
     });
+    init();
   }
 
   void _sendMessage(String message) {
@@ -43,6 +128,7 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
       _showSuggestions = false;
 
       _messages.add({
+
         'isUser': false,
         'message': 'شكراً على سؤالك! سأقوم بمساعدتك في ما يتعلق بـ "$message"',
         'timestamp': DateTime.now(),
@@ -109,7 +195,12 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                ),
+                // Navigator.pop(context),
           ),
           const SizedBox(width: 8),
           const Text(
@@ -150,6 +241,8 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
               decoration: BoxDecoration(
                 color: isUser
                     ? const Color(0xFF2D91C0).withOpacity(0.8)
+                :message['isWrong']==true?
+                Colors.red.withOpacity(0.1)
                     : Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -208,7 +301,8 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
 
   Widget _buildSuggestionCard(String title, IconData icon, String message) {
     return GestureDetector(
-      onTap: () => _sendMessage(message),
+      onTap: () => _sendMessageAi(message),
+      // onTap: () => _sendMessage(message),
       child: Container(
         width: 160,
         margin: const EdgeInsets.only(right: 12),
@@ -252,15 +346,15 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
       ),
       child: Row(
         children: [
-          _buildCircularButton(
-            Icons.mic,
-            () => navigationPush(context, const ChatgptVoiceScreen()),
-          ),
-          const SizedBox(width: 8),
-          _buildCircularButton(
-            Icons.camera_alt,
-            () {},
-          ),
+          // _buildCircularButton(
+          //   Icons.mic,
+          //   () => navigationPush(context, const ChatgptVoiceScreen()),
+          // ),
+          // const SizedBox(width: 8),
+          // _buildCircularButton(
+          //   Icons.camera_alt,
+          //   () {},
+          // ),
           const SizedBox(width: 12),
           Expanded(
             child: Container(
@@ -280,14 +374,16 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
                   hintStyle: TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
-                onSubmitted: _sendMessage,
+                onSubmitted: _sendMessageAi,
+                // onSubmitted: _sendMessage,
               ),
             ),
           ),
           const SizedBox(width: 12),
           _buildCircularButton(
             Icons.send,
-            () => _sendMessage(_messageController.text),
+            () => _sendMessageAi(_messageController.text),
+            // () => _sendMessage(_messageController.text),
             color: const Color(0xFF2D91C0),
           ),
         ],

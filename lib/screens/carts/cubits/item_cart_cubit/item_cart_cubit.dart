@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bloc/bloc.dart';
 
@@ -14,6 +13,7 @@ import '../../../../../core/widgets/widgets_Informative/empty_data_view.dart';
 import '../../../../../core/widgets/widgets_Informative/loading_data_view.dart';
 import '../../../../core/dialogs/loading_dialog.dart';
 import '../../../../core/helpers/response_helper.dart';
+import '../../data/models/cart_model.dart';
 import '../../domain/repositories/carts_repository.dart';
 
 
@@ -24,6 +24,7 @@ class ItemCartCubit extends Cubit<ItemCartState>  {
   final CartsRepository repository;
   ItemCartCubit(this.repository): super(const ItemCartState.initial());
   ItemCartModel? itemCart;
+  CartModel? cartModel;
   // int? priceOfferId;
 
 
@@ -32,8 +33,9 @@ class ItemCartCubit extends Cubit<ItemCartState>  {
 
 
   }
-
-
+  double  totalAmount(List<ItemCartModel> items)=> items.fold(0, (sum, item) => sum + ((num.tryParse("${item.item?.price}")??1) * (num.parse("${item.quantity}"))));
+  double  totalAmountWithTax(List<ItemCartModel> items,{double withTax=1})=>
+      totalAmount(items)+(totalAmount(items)*withTax);
 
   Future<void> createItemCarts(BuildContext context,
       { int? itemId})  async {

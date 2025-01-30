@@ -11,7 +11,8 @@ class ItemOrderModel {
   @JsonKey(name: "quantity")
   int? quantity;
   @JsonKey(name: "item")
-  int? itemId;
+  String? item;
+
   String? notes;
 
 
@@ -20,7 +21,7 @@ class ItemOrderModel {
     this.id,
     this.quantity,
     this.notes,
-    this.itemId,
+    this.item,
 
   });
 

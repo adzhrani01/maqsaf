@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../constants/colors_constants.dart';
 import '../../domain/error_handler/network_exceptions.dart';
-import '../../utils/assets_manager.dart';
 import '../../utils/color_manager.dart';
 import '../../utils/string_manager.dart';
 
@@ -167,7 +167,8 @@ class ErrorViewBase extends StatelessWidget {
       Icon(
               icon ?? Icons.report,
               size: ScreenUtil.defaultSize.width / 3,
-              color: ColorManager.grayColor,
+              color: ColorManager.whiteColor,
+              // color: ColorManager.grayColor,
             ),
        SizedBox(
         height: 10.w,
@@ -175,7 +176,7 @@ class ErrorViewBase extends StatelessWidget {
       if(onRetry!=null)
         Padding(
           padding:  EdgeInsets.symmetric(horizontal: ScreenUtil.defaultSize.width /4),
-          child: TextButton(child:Text( StringManager.retry),
+          child: TextButton(child:Text( StringManager.retry,style:TextStyle(color: AppColor.primaryColor,)),
             onPressed: onRetry,
           ),
         ),
@@ -183,7 +184,8 @@ class ErrorViewBase extends StatelessWidget {
         value ?? '',
         style: TextStyle(
           fontSize: ScreenUtil.defaultSize.width / 16,
-          color: Colors.grey,
+          color: Colors.white,
+          // color: Colors.grey,
         ),
       )
     ],

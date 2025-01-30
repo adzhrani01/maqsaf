@@ -8,6 +8,7 @@ import '../../../../../../core/data/models/base_model.dart';
 import '../../../../../../core/domain/services/api_service.dart';
 import '../../../../../../core/utils/app_url.dart';
 import '../../../../../core/domain/services/api_services_imp.dart';
+import '../../../../core/data/models/item_model.dart';
 import '../../../profile/data/models/user.dart';
 import '../models/user.dart';
 
@@ -58,46 +59,69 @@ class UserRemoteDataSource  {
           (json) => UserModel.fromJson(json),
     );
   }
+  Future<BaseModel> updateStudent({required int? id, String? dailyLimit,
+    String? balance,
+    List<ItemModel>? prohibitedIngredients,}) async {
+    Map<String,dynamic> data={
+      "id":id,
+    };
+    if(dailyLimit!=null)
+      data["daily_limit"]=dailyLimit;
+    if(balance!=null)
+      data["balance"]=balance;
+    if(prohibitedIngredients!=null)
+      data["prohibited_ingredients"]=prohibitedIngredients.map((e)=>e.id).toList()??[];
+      // data["prohibited_ingredients"]=prohibitedIngredients?.map((e)=>e.toJson())?.toList()??[];
 
-
-  Future<BaseModel> uploadPictureToCache({required String? path}) async {
-    FormData formData =FormData();
-    formData.files.add(
-      MapEntry("FormFile", await MultipartFile.fromFile(path??'',contentType:DioMediaType.parse('image/${path?.split('.').lastOrNull}'))),
-
-      // MapEntry("FormFile", await MultipartFile.fromBytes((await File(path!).readAsBytes()))),
-    );
-
-
-
-
-    // ApiServices api=ApiServicesImp(Dio())
-    final response = await _apiServices.post(AppUrl.uploadPictureToCache, hasToken: true,
+    FormData formData=FormData.fromMap(data);
+    final response = await _apiServices.put(AppUrl.updateCurrentUserProfile, hasToken: true,
         formData: formData);
-    response['message']='upload_picture_successful';
+    response['message']='update_profile_successful';
     return BaseModel.fromJson(
       response,
-          (json) => (json),
+          (json) => UserModel.fromJson(json),
     );
   }
 
-  Future<BaseModel> updateProfilePicture({required String? fileToken}) async {
-   var data={'fileToken':fileToken};
 
-    final response = await _apiServices.put(AppUrl.updateProfilePicture, hasToken: true,
-        body: data);
-    response['message']='update_picture_successful';
-    return BaseModel.fromJson(
-      response,
-          (json) => (json),
-    );
-  }
+  // Future<BaseModel> uploadPictureToCache({required String? path}) async {
+  //   FormData formData =FormData();
+  //   formData.files.add(
+  //     MapEntry("FormFile", await MultipartFile.fromFile(path??'',contentType:DioMediaType.parse('image/${path?.split('.').lastOrNull}'))),
+  //
+  //     // MapEntry("FormFile", await MultipartFile.fromBytes((await File(path!).readAsBytes()))),
+  //   );
+  //
+  //
+  //
+  //
+  //   // ApiServices api=ApiServicesImp(Dio())
+  //   final response = await _apiServices.post(AppUrl.uploadPictureToCache, hasToken: true,
+  //       formData: formData);
+  //   response['message']='upload_picture_successful';
+  //   return BaseModel.fromJson(
+  //     response,
+  //         (json) => (json),
+  //   );
+  // }
 
-  Future<BaseModel> getProfilePicture() async {
-    final response = await _apiServices.get(AppUrl.getProfilePicture, hasToken: true);
-    return BaseModel.fromJson(
-      response,
-          (json) => base64Decode(json['profilePicture']),
-    );
-  }
+  // Future<BaseModel> updateProfilePicture({required String? fileToken}) async {
+  //  var data={'fileToken':fileToken};
+  //
+  //   final response = await _apiServices.put(AppUrl.updateProfilePicture, hasToken: true,
+  //       body: data);
+  //   response['message']='update_picture_successful';
+  //   return BaseModel.fromJson(
+  //     response,
+  //         (json) => (json),
+  //   );
+  // }
+  //
+  // Future<BaseModel> getProfilePicture() async {
+  //   final response = await _apiServices.get(AppUrl.getProfilePicture, hasToken: true);
+  //   return BaseModel.fromJson(
+  //     response,
+  //         (json) => base64Decode(json['profilePicture']),
+  //   );
+  // }
 }

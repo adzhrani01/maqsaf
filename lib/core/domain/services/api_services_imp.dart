@@ -217,6 +217,7 @@ class ApiServicesImp implements ApiServices {
     log("├------------------------------------------------------------------------------");
     handler.next(options); //continue
   }, onResponse: (Response response, handler) async {
+    // print(response.data);
     log(response.data.toString());
     log("└------------------------------------------------------------------------------");
     handler.next(response);

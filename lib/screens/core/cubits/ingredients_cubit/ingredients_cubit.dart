@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -95,14 +94,14 @@ void onRefresh(BuildContext context){
     );
   }
 
-  Widget buildCarManufacturers(BuildContext context,IngredientsState state,Widget child)=>
+  Widget buildItems(BuildContext context,IngredientsState state,Widget child)=>
       state.maybeWhen(
           loading:()=>const LoadCircleList(itemCount:5),
-          failure: (networkExceptions)=>getWidgetView(NetworkExceptions.getErrorMessage(networkExceptions)),
+          failure: (networkExceptions)=>getWidgetView(context,NetworkExceptions.getErrorMessage(networkExceptions)),
           // empty:(_)=>getWidgetView('لا يوجد أنواع'),
           orElse: () =>child
       );
-  Widget getWidgetView(String message){
+  Widget getWidgetView(BuildContext context,String message){
     return  Center(
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -111,10 +110,19 @@ void onRefresh(BuildContext context){
         // height: 50.h,
         decoration: BoxDecoration(
           color: ColorManager.companyFilterRectangleColor,
-            borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        child: Text(
-          '${message} !'
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(child:Icon(Icons.refresh),
+              onTap:()=>onRefresh(context),
+            ),
+            SizedBox(width: 10.w,),
+            Text(
+                '${message} !'
+            ),
+          ],
         ),
       ),
     );

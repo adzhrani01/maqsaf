@@ -15,10 +15,8 @@ import '../../../../../core/helpers/response_helper.dart';
 
 import '../../../../../core/widgets/widgets_Informative/error_view.dart';
 import '../../../../core/widgets/constants_widgets.dart';
-import '../../../../core/widgets/widgets_Informative/loading_data_view.dart';
 import '../../../login/domain/repositories/auth_repository.dart';
 
-import '../auth_cubit/auth_cubit.dart';
 
 part 'change_password_state.dart';
 part 'change_password_cubit.freezed.dart';

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -6,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maqsaf_app/core/widgets/shimmer/load_List.dart';
 
 import 'package:maqsaf_app/core/widgets/widgets_Informative/error_view.dart';
+import 'package:maqsaf_app/core/widgets/widgets_Informative/loading_data_view.dart';
 
 import '../../../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../../../core/widgets/shimmer/load_circle_List.dart';
@@ -31,7 +32,7 @@ class ItemsCubit extends Cubit<ItemsState>  {
   List<FoodModel> itemsByFilter=[];
 
 
-
+  int? selectedCategoryId;
 
 
   notify(){
@@ -40,8 +41,9 @@ class ItemsCubit extends Cubit<ItemsState>  {
 
 
   void init(BuildContext context)  {
-
+    selectedCategoryId=null;
     getAllItems(context);
+
 
   }
 
@@ -63,10 +65,11 @@ void onRefresh(BuildContext context){
         List list = data.result.list;
 
         items.addAll(list.whereType());
-        if(items.isEmpty)
-          emit(ItemsState.empty( data.message),);
-         else
-        emit(ItemsState.success(items, data.message),);
+        filter();
+        // if(items.isEmpty)
+        //   emit(ItemsState.empty( data.message),);
+        //  else
+        // emit(ItemsState.success(items, data.message),);
       },
       failure: (networkException) {
         emit(ItemsState.failure(networkException),);
@@ -74,6 +77,26 @@ void onRefresh(BuildContext context){
 
       },
     );
+  }
+
+  filter() async {
+    itemsByFilter.clear();
+
+    items.forEach((element) {
+
+      if(selectedCategoryId==null||(element.categories?.contains(selectedCategoryId)??false))
+          itemsByFilter.add(element);
+
+    });
+    if(itemsByFilter.isEmpty)
+      emit(ItemsState.empty( ""),);
+    else
+      emit(ItemsState.success(itemsByFilter,""),);
+  }
+
+  void changeIndex(int? id){
+    selectedCategoryId=id;
+    filter();
   }
 
 
@@ -93,8 +116,8 @@ void onRefresh(BuildContext context){
 
   Widget buildItems(BuildContext context,ItemsState state,Widget child)=>
       state.maybeWhen(
-          loading:()=>const LoadCircleList(itemCount:5),
-          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,),
+          loading:()=>const LoadingDataView(),
+          failure: (networkExceptions)=>ErrorView(networkExceptions: networkExceptions,onRetry:()=>onRefresh(context)),
           empty:(_)=>EmptyDataView(),
           orElse: () =>child
       );

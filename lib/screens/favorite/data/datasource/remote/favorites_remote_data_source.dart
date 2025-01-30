@@ -24,7 +24,7 @@ class FavoritesRemoteDataSource  {
         hasToken: true);
 
     return BaseModel.fromJson(
-      response,
+      {"result":response},
           (json) => BaseModels.fromJson(json,FavoriteModel.fromJson),
     );
   }
@@ -39,8 +39,25 @@ class FavoritesRemoteDataSource  {
 
 
 
-    final response = await _apiServices.post(AppUrl.addItemForFavorite,
+    final response = await _apiServices.post(AppUrl.addItemForFavorite+"${itemId}/",
         body:data,
+        hasToken: true);
+
+    return BaseModel(result: null, message: 'تمت العملية بنجاح' );
+  }
+
+  Future<BaseModel> deleteItemFromFavorite(
+      int? itemId,int? studentId
+      ) async {
+    var data={
+      "item":itemId,
+      "student":studentId,
+    };
+
+
+
+    final response = await _apiServices.delete(AppUrl.deleteItemForFavorite+"${studentId}/favorites/${studentId}/",
+        // body:data,
         hasToken: true);
 
     return BaseModel(result: null, message: 'تمت العملية بنجاح' );

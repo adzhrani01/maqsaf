@@ -104,6 +104,8 @@ abstract class NetworkExceptions with _$NetworkExceptions implements Exception {
 
     switch (statusCode) {
       case 400:
+        return NetworkExceptions.unprocessableEntity("${errorModel.message??'Un Processable Entity'}");
+      // case 400:
       case 401:
         return NetworkExceptions.unauthorizedRequest("${errorModel.message??'Un Authorized Request'}");
       case 403:

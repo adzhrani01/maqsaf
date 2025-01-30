@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:maqsaf_app/screens/payment_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:maqsaf_app/core/helpers/date_formate.dart';
+import 'package:maqsaf_app/screens/payment_carts/payment_screen.dart';
 import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 import '../widgets/custom_button.dart';
+import 'carts/cubits/item_cart_cubit/item_cart_cubit.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -34,8 +38,7 @@ class _CartScreenState extends State<CartScreen> {
     ),
   ];
 
-  double get totalAmount =>
-      cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  double get totalAmount => cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +74,13 @@ class _CartScreenState extends State<CartScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: cartItems.isEmpty
+                        child: ( context.read<ItemCartCubit>().cartModel?.items?.isEmpty??true)
+                        // child: cartItems.isEmpty
                             ? _buildEmptyCart(width)
                             : _buildCartList(width),
                       ),
-                      if (cartItems.isNotEmpty) _buildCartSummary(width),
+                      if ( context.read<ItemCartCubit>().cartModel?.items?.isNotEmpty??false) _buildCartSummary(width),
+                      // if (cartItems.isNotEmpty) _buildCartSummary(width),
                     ],
                   ),
                 ),
@@ -108,7 +113,8 @@ class _CartScreenState extends State<CartScreen> {
             ),
             const Spacer(),
             Text(
-              '${cartItems.length} عناصر',
+              '${context.read<ItemCartCubit>().cartModel?.items?.length??0} عناصر',
+              // '${cartItems.length} عناصر',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: width * 0.04,
@@ -152,13 +158,14 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildCartList(double width) {
+    final items= context.read<ItemCartCubit>().cartModel?.items??[];
     return ListView.separated(
-      itemCount: cartItems.length,
+      itemCount: items.length,
       separatorBuilder: (context, index) => const Divider(),
       itemBuilder: (context, index) {
-        final item = cartItems[index];
+        final item = items[index];
         return Dismissible(
-          key: Key(item.name + index.toString()),
+          key: Key((item.item?.name??'') + index.toString()),
           direction: DismissDirection.endToStart,
           background: Container(
             alignment: Alignment.centerLeft,
@@ -168,19 +175,52 @@ class _CartScreenState extends State<CartScreen> {
           ),
           onDismissed: (direction) {
             setState(() {
-              cartItems.removeAt(index);
+              items.removeAt(index);
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('تم حذف ${item.name}')),
+              SnackBar(content: Text('تم حذف ${item.item?.name??''}')),
             );
           },
-          child: _buildCartItem(item, width),
+          child: _buildCartItem(
+              index,
+              CartItem(name: item.item?.name??'',
+              price: double.tryParse(item.item?.price??'')??0,
+              quantity: item.quantity??0,
+              deliveryDate: DateFormatHelper.formatTimeOrder(item.deliveryDate??DateTime.now(), "ar"),
+              deliveryTime: intl.DateFormat().add_jm().format(item.deliveryDate??DateTime.now())
+              , notes: item.notes??'', extras: item.extras??[]), width),
         );
       },
     );
+    //ListView.separated(
+    //       itemCount: cartItems.length,
+    //       separatorBuilder: (context, index) => const Divider(),
+    //       itemBuilder: (context, index) {
+    //         final item = cartItems[index];
+    //         return Dismissible(
+    //           key: Key(item.name + index.toString()),
+    //           direction: DismissDirection.endToStart,
+    //           background: Container(
+    //             alignment: Alignment.centerLeft,
+    //             padding: const EdgeInsets.only(left: 20),
+    //             color: Colors.red,
+    //             child: const Icon(Icons.delete, color: Colors.white),
+    //           ),
+    //           onDismissed: (direction) {
+    //             setState(() {
+    //               cartItems.removeAt(index);
+    //             });
+    //             ScaffoldMessenger.of(context).showSnackBar(
+    //               SnackBar(content: Text('تم حذف ${item.name}')),
+    //             );
+    //           },
+    //           child: _buildCartItem(item, width),
+    //         );
+    //       },
+    //     )
   }
 
-  Widget _buildCartItem(CartItem item, double width) {
+  Widget _buildCartItem(int index,CartItem item, double width) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -259,6 +299,7 @@ class _CartScreenState extends State<CartScreen> {
                   setState(() {
                     if (item.quantity > 1) {
                       item.quantity--;
+                      context.read<ItemCartCubit>().cartModel?.items?[index].quantity=item.quantity;
                     }
                   });
                 },
@@ -272,6 +313,7 @@ class _CartScreenState extends State<CartScreen> {
                 onPressed: () {
                   setState(() {
                     item.quantity++;
+                    context.read<ItemCartCubit>().cartModel?.items?[index].quantity=item.quantity;
                   });
                 },
               ),
@@ -298,7 +340,8 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             Text(
-              '${(totalAmount).toStringAsFixed(2)} ر.س',
+              '${(context.read<ItemCartCubit>().totalAmount(context.read<ItemCartCubit>().cartModel?.items??[])).toStringAsFixed(2)} ر.س',
+              // '${(totalAmount).toStringAsFixed(2)} ر.س',
               style: TextStyle(
                 fontSize: width * 0.045,
                 fontWeight: FontWeight.bold,
@@ -311,7 +354,9 @@ class _CartScreenState extends State<CartScreen> {
         CustomButton(
           label: 'متابعة عملية الدفع',
           onTap: () {
-            navigationPush(context, const PaymentScreen());
+            navigationPush(context,  PaymentScreen(
+              items: context.read<ItemCartCubit>().cartModel?.items??[],
+            ));
           },
           txtSize: width * 0.04,
         ),

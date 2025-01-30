@@ -4,6 +4,8 @@ import 'package:maqsaf_app/core/data/models/item_model.dart';
 import '../../../../../../core/data/models/base_model.dart';
 import '../../../../../../core/domain/services/api_service.dart';
 import '../../../../../../core/utils/app_url.dart';
+import '../../../../carts/data/models/item_cart_model.dart';
+import '../../../../payment_carts/data/models/payment_cart_model.dart';
 import '../../models/order_model.dart';
 
 class OrdersRemoteDataSource  {
@@ -13,33 +15,38 @@ class OrdersRemoteDataSource  {
   
 
 
-  Future<BaseModel> getAllOrders() async {
+  Future<BaseModel> getAllOrders(int? studentId) async {
 
     Map<String, String> queryParams={};
 
 
-    final response = await _apiServices.get(AppUrl.getAllOrders,
+    final response = await _apiServices.get(AppUrl.getAllOrders+"$studentId",
         queryParams: queryParams,
         // body: data,
         hasToken: true);
-
+    print(response);
     return BaseModel.fromJson(
-      response,
+
+      {"result":response},
           (json) => BaseModels.fromJson(json,OrderModel.fromJson),
     );
   }
 
   Future<BaseModel> createOrder(
-      int? itemId,int? studentId
+      List<ItemCartModel>? items,String? totalPrice,int? studentId,int? paymentType,PaymentCartModel? paymentCart
       ) async {
     var data={
-      "item":itemId,
-      "student":studentId,
+      "items":(items??[]).map((e)=>e.toJson()).toList(),
+      // "student":studentId,
+      "total_price":totalPrice,
+      "payment_type":paymentType,
+      "card":paymentCart?.toJson(),
+      "date":"2025-01-30"
     };
 
 
 
-    final response = await _apiServices.post(AppUrl.createOrder,
+    final response = await _apiServices.post(AppUrl.scheduledOrder+"${studentId}/create/",
         body:data,
         hasToken: true);
 

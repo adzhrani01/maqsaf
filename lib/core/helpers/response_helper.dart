@@ -9,7 +9,6 @@ import '../data/enums/toast_status.dart';
 import '../domain/error_handler/message.dart';
 import '../domain/error_handler/network_exceptions.dart';
 import '../widgets/constants_widgets.dart';
-import '../widgets/toast_widget/toast_manager.dart';
 
 class ResponseHelper {
   static void onSuccess(BuildContext context, {String? message, String? title}) {

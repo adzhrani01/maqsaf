@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:maqsaf_app/core/data/models/item_model.dart';
+
+import '../../../items/data/models/food_model.dart';
 part 'item_cart_model.g.dart';
 
 
@@ -12,6 +14,14 @@ class ItemCartModel {
   int? quantity;
   @JsonKey(name: "item")
   int? itemId;
+  @JsonKey(name: "item",includeToJson:false,includeFromJson:false)
+  FoodModel? item;
+  String? notes;
+  List<String>? extras;
+  @JsonKey(name: "delivery_date")
+  DateTime? deliveryDate;
+  @JsonKey(includeToJson:false,includeFromJson:false)
+  String? deliveryTime;
 
 
 
@@ -19,6 +29,11 @@ class ItemCartModel {
     this.id,
     this.quantity,
     this.itemId,
+    this.notes,
+    this.extras,
+    this.deliveryDate,
+    this.deliveryTime,
+    this.item,
 
   });
 

@@ -11,14 +11,18 @@ class FoodModel {
   String? name;
   String? description;
   String? price;
-  List<ItemModel>? categories;
-  List<ItemModel>? ingredients;
+  String? image;
+  int? calories;
+  List<int>? categories;
+  List<int>? ingredients;
 
 
   FoodModel({
     this.id,
     this.name,
     this.price,
+    this.image,
+    this.calories,
     this.description,
     this.categories,
     this.ingredients,

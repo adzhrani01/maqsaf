@@ -41,8 +41,10 @@ String formatFileSize(int fileSize) {
 //   }
 // }
 
-String getStorageUrl( String url)  {
-  if(url.startsWith('http')) {
+String? getStorageUrl( String? url)  {
+  if(url?.isEmpty??true)
+    return url;
+  if(url!.startsWith('http')) {
     return url;
   }
   return storageUrl+url;

@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maqsaf_app/core/dialogs/logout_dialog.dart';
+import 'package:maqsaf_app/screens/core/cubits/ingredients_cubit/ingredients_cubit.dart';
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
+
+import '../../core/helpers/operation_file.dart';
+import '../../core/widgets/image/image_food.dart';
+import '../items/cubits/items_cubit/items_cubit.dart';
+import '../items/data/models/food_model.dart';
 
 class DeletedFoodsPage extends StatefulWidget {
   const DeletedFoodsPage({Key? key}) : super(key: key);
@@ -57,15 +67,30 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
     });
   }
 
-  List<Map<String, dynamic>> getFilteredFoods() {
-    return foodItems.where((food) {
+  // List<Map<String, dynamic>> getFilteredFoods() {
+  //   return foodItems.where((food) {
+  //     bool matchesSearch = _searchController.text.isEmpty ||
+  //         food['title']
+  //             .toLowerCase()
+  //             .contains(_searchController.text.toLowerCase());
+  //     bool matchesFilters = selectedFilters.isEmpty ||
+  //         (food['categories'] as List)
+  //             .any((cat) => selectedFilters.contains(cat));
+  //     return matchesSearch && matchesFilters;
+  //   }).toList();
+  // }
+  List<FoodModel> getFilteredFoods() {
+
+    // print(selectedFilters);
+    // print(context.read<UserCubit>().user?.prohibitedIngredients?.map((e)=>"${e.id}").toList()??[]);
+    return context.read<ItemsCubit>().items.where((food) {
+
       bool matchesSearch = _searchController.text.isEmpty ||
-          food['title']
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase());
-      bool matchesFilters = selectedFilters.isEmpty ||
-          (food['categories'] as List)
-              .any((cat) => selectedFilters.contains(cat));
+          (food.name?.toLowerCase().contains(_searchController.text.toLowerCase())??false);
+      bool matchesFilters =
+          // selectedFilters.isEmpty ||
+          ((food.ingredients as List<int>?)??[])
+              .any((ing) => selectedFilters.contains('${ing}'));
       return matchesSearch && matchesFilters;
     }).toList();
   }
@@ -126,6 +151,14 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
     );
   }
 
+  @override
+  void initState() {
+    context.read<IngredientsCubit>().init(context);
+    selectedFilters= context.read<UserCubit>().user?.prohibitedIngredients?.map((e)=>"${e.id}").toList()??[];
+
+    context.read<ItemsCubit>().init(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,41 +239,51 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text(
-                    ':المحذوفات',
-                    style: TextStyle(color: Color(0xFF15445A)),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 40,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      reverse: true,
-                      children: filters.map((filter) {
-                        bool isSelected =
-                            selectedFilters.contains(filter['id']);
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: FilterChip(
-                            label: Text(filter['label']!),
-                            selected: isSelected,
-                            onSelected: (_) => toggleFilter(filter['id']!),
-                            backgroundColor: Colors.white,
-                            selectedColor: Color(0xFF15445A),
-                            labelStyle: TextStyle(
-                              color:
-                                  isSelected ? Colors.white : Color(0xFF15445A),
+              child:     BlocBuilder<IngredientsCubit,IngredientsState>(
+                buildWhen: (previous, current)=>context.read<IngredientsCubit>().buildCategoriesWhen(previous, current),
+                builder: (context, state)=>
+                    context.read<IngredientsCubit>().buildItems(context, state,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            ':المحذوفات',
+                            style: TextStyle(color: Color(0xFF15445A)),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 40,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              reverse: true,
+                              children:
+
+                              context.read<IngredientsCubit>().ingredients.map((filter) {
+                              // filters.map((filter) {
+                                bool isSelected = selectedFilters.contains("${filter.id}");
+                                // bool isSelected = selectedFilters.contains(filter['id']);
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: FilterChip(
+                                    label: Text(filter.name??''),
+                                    // label: Text(filter['label']!),
+                                    selected: isSelected,
+                                    onSelected: (_) => toggleFilter("${filter.id}"),
+                                    // onSelected: (_) => toggleFilter(filter['id']!),
+                                    backgroundColor: Colors.white,
+                                    selectedColor: Color(0xFF15445A),
+                                    labelStyle: TextStyle(
+                                      color:
+                                      isSelected ? Colors.white : Color(0xFF15445A),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
+                        ],
+                      ),
+                    ))
             ),
             Expanded(
               child: Padding(
@@ -254,49 +297,71 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
                     ),
                     const SizedBox(height: 16),
                     Expanded(
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        children: [
-                          ...getFilteredFoods().map((food) => FoodCard(
-                                title: food['title'],
-                                icon: food['icon'],
-                                status: food['status'],
-                              )),
-                          // Add New Item Button
-                          InkWell(
-                            onTap: _showAddItemDialog,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.red[400],
-                                    size: 32,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'العنصر غير متوفر؟',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child:
+                      BlocBuilder<ItemsCubit,ItemsState>(
+                        buildWhen: (previous, current)=>context.read<ItemsCubit>().buildItemsWhen(previous, current),
+                        builder: (context, state)=>
+                            context.read<ItemsCubit>().buildItems(context, state,
+                                GridView.count(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 16,
+                                  crossAxisSpacing: 16,
+                                  children: [
+                                    ...getFilteredFoods().map((food) => FoodCard(
+                                      image: getStorageUrl( food.image),
+                                      title: food.name??'',
+                                      icon: "",
+                                      status: foodItems.first['status'],
+                                    )),
+                                    // ...getFilteredFoods().map((food) => FoodCard(
+                                    //   title: food['title'],
+                                    //   icon: food['icon'],
+                                    //   status: food['status'],
+                                    // )),
+                                    // Add New Item Button
+                                    InkWell(
+                                      onTap: _showAddItemDialog,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.add,
+                                              color: Colors.red[400],
+                                              size: 32,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            const Text(
+                                              'العنصر غير متوفر؟',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+
+                            )),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () =>
+                            context.read<UserCubit>().updateStudents(context,
+                            withBack: true,
+                            prohibitedIngredients:
+
+
+                            context.read<IngredientsCubit>().ingredients
+                            .where((e)=>selectedFilters.contains("${e.id}")).toList()
+                        ),
+                        // onPressed: () => Navigator.pop(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50),
@@ -329,12 +394,13 @@ class FoodCard extends StatelessWidget {
   final String title;
   final String icon;
   final String status;
+  final String? image;
 
   const FoodCard({
     Key? key,
     required this.title,
     required this.icon,
-    required this.status,
+    required this.status, required this.image,
   }) : super(key: key);
 
   @override
@@ -350,6 +416,19 @@ class FoodCard extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              icon.isEmpty?
+          Expanded(
+            child: ImageFood(
+                url:image,
+                width: 150.w,
+                // height: height * 0.25,
+                fit: BoxFit.cover,
+                foregroundColor:Colors.grey.shade400 ,
+                backgroundColor:Colors.grey.shade200 ,
+
+              ),
+          )
+                  :
               Text(
                 icon,
                 style: const TextStyle(fontSize: 40),

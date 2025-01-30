@@ -31,8 +31,7 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _repository;
   AuthCubit(this._repository) : super(const AuthState.initial());
   Map<String,dynamic>? result;
-
-
+  bool isRefresh=false;
 
 
 
@@ -103,10 +102,11 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> refreshToken(BuildContext context,) async {
+    if(isRefresh) return;
     emit(
       const AuthState.loading(),
     );
-
+    isRefresh=true;
     LoadingDialog.show(context);
 
     final response = await _repository.refreshToken();
@@ -114,10 +114,12 @@ class AuthCubit extends Cubit<AuthState> {
     response.when(
       success: (data) async {
         result = data.result;
+        isRefresh=false;
         emit(
           AuthState.success(result?['access'],''),
         );
         await _saveUser(context);
+
         ResponseHelper.onSuccess(context,message: data.message);
 
         LoadingDialog.hide(context);
@@ -129,6 +131,7 @@ class AuthCubit extends Cubit<AuthState> {
       failure: (networkException) async {
         Future.delayed(Duration(seconds: 3), () async {
           LoadingDialog.hide(context);
+          isRefresh=false;
           emit(AuthState.failure(networkException),);
           ResponseHelper.onFailure(context,message: NetworkExceptions.getErrorMessage(networkException));
           context.read<UserCubit>().user=null;
@@ -136,6 +139,7 @@ class AuthCubit extends Cubit<AuthState> {
         });
 
       },
+
     );
   }
 

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bloc/bloc.dart';
 
@@ -34,9 +33,16 @@ class FavoriteCubit extends Cubit<FavoriteState>  {
   }
 
 
+  Future<void> changeItemFavourite( BuildContext context,{int? itemId,VoidCallback? onSuccess ,required bool favorite})async {
+
+    !favorite?await addItemForFavorite(context,itemId: itemId,onSuccess:onSuccess)
+        :await deleteItemFromFavorite(context,itemId: itemId,onSuccess:onSuccess);
+  }
+
+
 
   Future<void> addItemForFavorite(BuildContext context,
-      { int? itemId})  async {
+      { int? itemId,VoidCallback? onSuccess })  async {
 
 
     int? studentId=  context.read<UserCubit>().user?.id;
@@ -50,6 +56,33 @@ class FavoriteCubit extends Cubit<FavoriteState>  {
 
         LoadingDialog.hide(context);
         ResponseHelper.onSuccess(context,message: data.message);
+        onSuccess?.call();
+        // onRefreshItem(context, priceOfferId: priceOfferId);
+        // context.read<PriceOfferFullsCubit>().onRefresh();
+      },
+      failure: (networkException) {
+        LoadingDialog.hide(context);
+        ResponseHelper.onNetworkFailure(context,networkException: networkException);
+
+      },
+    );
+  }
+  Future<void> deleteItemFromFavorite(BuildContext context,
+      { int? itemId,VoidCallback? onSuccess })  async {
+
+
+    int? studentId=  context.read<UserCubit>().user?.id;
+    LoadingDialog.show(context);
+    final response = await repository.deleteItemFromFavorite(
+        itemId:itemId,
+        studentId:studentId
+    );
+    response.when(
+      success: (data) async {
+
+        LoadingDialog.hide(context);
+        ResponseHelper.onSuccess(context,message: data.message);
+        onSuccess?.call();
         // onRefreshItem(context, priceOfferId: priceOfferId);
         // context.read<PriceOfferFullsCubit>().onRefresh();
       },

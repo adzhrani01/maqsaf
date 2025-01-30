@@ -29,7 +29,8 @@ class EmptyDataView extends StatelessWidget {
         Icon(
                 Icons.warning_amber_outlined,
                 size: ScreenUtil.defaultSize.width / 3,
-                color: ColorManager.grayColor,
+                color: ColorManager.whiteColor,
+                // color: ColorManager.grayColor,
               ),
          SizedBox(
           height:10.w,
@@ -39,7 +40,8 @@ class EmptyDataView extends StatelessWidget {
           // tr(text??'No Data Yet!'),
           style: TextStyle(
             fontSize: ScreenUtil.defaultSize.width / 16,
-            color: Colors.grey,
+            color:ColorManager.whiteColor,
+            // color: Colors.grey,
           ),
         )
       ],

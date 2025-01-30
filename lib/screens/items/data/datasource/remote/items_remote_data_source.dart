@@ -24,7 +24,7 @@ class ItemsRemoteDataSource  {
         hasToken: true);
 
     return BaseModel.fromJson(
-      response,
+        {"result":response},
           (json) => BaseModels.fromJson(json,FoodModel.fromJson),
     );
   }

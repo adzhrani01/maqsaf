@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import '../helpers/size_config.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:maqsaf_app/core/helpers/date_formate.dart';
+import 'package:maqsaf_app/screens/orders/cubits/carts_cubit/orders_cubit.dart';
+import '../../helpers/size_config.dart';
+import 'data/models/order_model.dart';
 
 class PurchaseOperationScreen extends StatefulWidget {
   const PurchaseOperationScreen({super.key});
@@ -11,7 +16,11 @@ class PurchaseOperationScreen extends StatefulWidget {
 
 class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
   int selectedTab = 0;
-
+  @override
+  void initState() {
+    context.read<OrdersCubit>().init(context);
+    super.initState();
+  }
   Widget _buildAppBar(double width) {
     return Container(
       padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -83,7 +92,10 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: () => setState(() => selectedTab = 0),
+                onTap: () {
+                  context.read<OrdersCubit>().changeIndex(0);
+                  setState(() => selectedTab = 0);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: selectedTab == 0
@@ -107,7 +119,10 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
             ),
             Expanded(
               child: GestureDetector(
-                onTap: () => setState(() => selectedTab = 1),
+                onTap: () {
+              context.read<OrdersCubit>().changeIndex(1);
+              setState(() => selectedTab = 1);
+              },
                 child: Container(
                   decoration: BoxDecoration(
                     color: selectedTab == 1
@@ -135,7 +150,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
     );
   }
 
-  Widget _buildOrderCard(int index, double width) {
+  Widget _buildOrderCard(int index, double width,OrderModel? item) {
     final statuses = ['ملغي', 'مكتمل', 'قيد التنفيذ', 'معلق'];
     final statusColors = {
       'ملغي': Colors.red,
@@ -144,7 +159,8 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
       'معلق': Colors.grey,
     };
 
-    final status = statuses[index % statuses.length];
+    final status = item?.getArabicStatus??"معلق";
+    // final status = statuses[index % statuses.length];
     final statusColor = statusColors[status];
 
     return Container(
@@ -174,7 +190,9 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '#${1000 + index}',
+                     "#${ item?.id??"ORD-00${index+1}"}"
+                     // "#${ item?.id??'${1000 + index}'}"
+                      ,
                       style: TextStyle(
                         color: const Color(0xFF15445A),
                         fontSize: width * 0.04,
@@ -206,7 +224,8 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
                         size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 8),
                     Text(
-                      '2024-10-22',
+                      intl.DateFormat("dd-MM-yyyy").format( item?.date??DateTime.now()),
+                      // '2024-10-22',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: width * 0.035,
@@ -224,17 +243,30 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'ساندويتش زبدة فول سوداني',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: width * 0.04,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+
+                          ...(item?.items??[]).map((item) => Row(
+                            children: [
+                              const Icon(Icons.circle, size: 8),
+                              const SizedBox(width: 8),
+                              Text("${item.item}",  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: width * 0.04,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                            ],
+                          )),
+                          // Text(
+                          //   item.items
+                          //   'ساندويتش زبدة فول سوداني',
+                          //   style: TextStyle(
+                          //     color: Colors.black87,
+                          //     fontSize: width * 0.04,
+                          //     fontWeight: FontWeight.w500,
+                          //   ),
+                          // ),
                           const SizedBox(height: 4),
                           Text(
-                            '× 1',
+                            '× ${item?.items?.length??1}',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: width * 0.035,
@@ -244,7 +276,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
                       ),
                     ),
                     Text(
-                      '6 ر.س',
+                      '${item?.totalPrice??'--'} ر.س',
                       style: TextStyle(
                         color: const Color(0xFF15445A),
                         fontSize: width * 0.045,
@@ -281,13 +313,21 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
               _buildAppBar(width),
               _buildTabBar(width),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  padding: const EdgeInsets.only(top: 8, bottom: 16),
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) =>
-                      _buildOrderCard(index, width),
-                ),
+                child:
+                BlocBuilder<OrdersCubit,OrdersState>(
+                    buildWhen: (previous, current)=>context.read<OrdersCubit>().buildItemsWhen(previous, current),
+                    builder: (context, state)=>
+                        context.read<OrdersCubit>().buildItems(context, state,
+                            ListView.builder(
+                              itemCount:context.read<OrdersCubit>().itemsByFilter.length?? 10,
+                              padding: const EdgeInsets.only(top: 8, bottom: 16),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) =>
+                                  _buildOrderCard(index, width,context.read<OrdersCubit>().itemsByFilter[index]),
+                            ))
+                )
+
+              ,
               ),
             ],
           ),

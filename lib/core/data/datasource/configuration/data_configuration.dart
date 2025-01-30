@@ -8,10 +8,13 @@ import '../../../../screens/core/cubits/categories_cubit/categories_cubit.dart';
 import '../../../../screens/core/cubits/change_password_cubit/change_password_cubit.dart';
 import '../../../../screens/core/cubits/ingredients_cubit/ingredients_cubit.dart';
 import '../../../../screens/favorite/cubits/favorite_cubit/favorite_cubit.dart';
-import '../../../../screens/favorite/cubits/items_cubit/favorites_cubit.dart';
+import '../../../../screens/favorite/cubits/favorites_cubit/favorites_cubit.dart';
 import '../../../../screens/items/cubits/items_cubit/items_cubit.dart';
+import '../../../../screens/notification/cubits/notifications_cubit/notifications_cubit.dart';
 import '../../../../screens/orders/cubits/carts_cubit/orders_cubit.dart';
 import '../../../../screens/orders/cubits/order_cubit/order_cubit.dart';
+import '../../../../screens/payment_carts/cubits/payment_cart_cubit/payment_cart_cubit.dart';
+import '../../../../screens/payment_carts/cubits/payment_carts_cubit/payment_carts_cubit.dart';
 import '../../../../screens/profile/cubits/user_cubit/user_cubit.dart';
 import '../../../../screens/splash/cubits/splash_cubit/splash_cubit.dart';
 import '../../models/drop_item_model.dart';
@@ -42,6 +45,9 @@ initDataConfiguration() async {
     BlocProvider<ItemCartCubit>(create: (context) => locator<ItemCartCubit>()),
     BlocProvider<OrdersCubit>(create: (context) => locator<OrdersCubit>()),
     BlocProvider<OrderCubit>(create: (context) => locator<OrderCubit>()),
+    BlocProvider<PaymentCartsCubit>(create: (context) => locator<PaymentCartsCubit>()),
+    BlocProvider<PaymentCartCubit>(create: (context) => locator<PaymentCartCubit>()),
+    BlocProvider<NotificationsCubit>(create: (context) => locator<NotificationsCubit>()),
 
 
 

@@ -11,13 +11,13 @@ ItemOrderModel _$ItemOrderModelFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt(),
       quantity: (json['quantity'] as num?)?.toInt(),
       notes: json['notes'] as String?,
-      itemId: (json['item'] as num?)?.toInt(),
+      item: json['item'] as String?,
     );
 
 Map<String, dynamic> _$ItemOrderModelToJson(ItemOrderModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'quantity': instance.quantity,
-      'item': instance.itemId,
+      'item': instance.item,
       'notes': instance.notes,
     };

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 import '../helpers/size_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/textfield.dart';
 
 class DailyLimitScreen extends StatefulWidget {
   const DailyLimitScreen({super.key});
-
   @override
   State<DailyLimitScreen> createState() => _DailyLimitScreenState();
 }
@@ -13,6 +14,15 @@ class DailyLimitScreen extends StatefulWidget {
 class _DailyLimitScreenState extends State<DailyLimitScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  late TextEditingController dailyLimitController ;
+
+  @override
+  void initState() {
+    final user= context.read<UserCubit>().user;
+
+    dailyLimitController=TextEditingController(text:user?.dailyLimit??'' );
+    super.initState();
+  }
   Widget _buildAppBar(double width) {
     return Container(
       padding: const EdgeInsets.only(top: 15, bottom: 15),
@@ -131,8 +141,16 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const CustomTextfield(
+                               CustomTextfield(
+                                 keyboardType: TextInputType.number,
+                                controller: dailyLimitController,
                                 hintText: 'أدخل الحد اليومي',
+                                 validator:  (String? val) {
+                                   if (val!.trim().isEmpty) return "هذا الحقل مطلوب";
+                                   if (num.tryParse(val)==null) return "ادخال غير صالح";
+                                   if (num.parse(val)<=1) return "يجب أن يكون الحد اليومي أكثر من 1 س.ر";
+                                   return null;
+                                 },
                               ),
                               const SizedBox(height: 12),
                               Row(
@@ -213,14 +231,20 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 250),
+                        SizedBox(height: 70),
+                        // SizedBox(height: 250),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(horizontal: width * 0.20),
                           child: CustomButton(
                             label: 'حفظ',
                             onTap: () {
-                              if (_formKey.currentState!.validate()) {}
+                              if(_formKey.currentState?.validate()??false)
+                                context.read<UserCubit>().updateStudents(context,
+                                  withBack: true,
+                                  dailyLimit: dailyLimitController.value.text
+                                );
+
                             },
                             txtSize: width * 0.04,
                           ),

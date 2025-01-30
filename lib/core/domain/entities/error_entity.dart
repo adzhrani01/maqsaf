@@ -7,7 +7,7 @@ class ErrorEntity {
 
   String? message;
   String? details;
-  dynamic? validationErrors;
+  dynamic validationErrors;
   int? code;
 
   ErrorEntity({required this.message
