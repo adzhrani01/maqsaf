@@ -29,8 +29,12 @@ class SelectStudentScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColor.primaryColor,
         body: Container(
+        decoration: BoxDecoration(
+        gradient:
+
+        AppColor.myGradient),
           height: height,
-          decoration: linearGradientDecoration(),
+          // decoration: linearGradientDecoration(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

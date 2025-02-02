@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maqsaf_app/core/helpers/date_formate.dart';
 import 'package:maqsaf_app/screens/orders/cubits/carts_cubit/orders_cubit.dart';
+import '../../constants/colors_constants.dart';
 import '../../core/helpers/helpers.dart';
 import '../../helpers/size_config.dart';
 import 'data/models/order_model.dart';
@@ -86,6 +87,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
         height: 50,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
+
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
         ),
@@ -126,6 +128,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
               },
                 child: Container(
                   decoration: BoxDecoration(
+
                     color: selectedTab == 1
                         ? const Color(0xFF15445A)
                         : Colors.transparent,
@@ -168,6 +171,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
+
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -303,7 +307,7 @@ class _PurchaseOperationScreenState extends State<PurchaseOperationScreen> {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient:     AppColor.myGradient??LinearGradient(
               colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

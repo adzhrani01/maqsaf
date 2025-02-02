@@ -45,8 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor:AppColor.primaryColor,
         body: Container(
           height: height,
+          decoration: BoxDecoration(
+              gradient:
+
+              AppColor.myGradient),
           padding: EdgeInsets.symmetric(horizontal: width * 0.05,),
-          decoration: linearGradientDecoration(),
+          // decoration: linearGradientDecoration(),
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,

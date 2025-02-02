@@ -77,6 +77,8 @@ class _AddCardModalState extends State<AddCardModal>
           child: Container(
             height: MediaQuery.of(context).size.height * 0.85,
             decoration: const BoxDecoration(
+              // gradient:  AppColor.myGradient,
+
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
@@ -110,7 +112,7 @@ class _AddCardModalState extends State<AddCardModal>
                                 width: 300,
                                 height: 180,
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
+                                  gradient: AppColor.myGradient?? const LinearGradient(
                                     colors: [
                                       Color(0xFF0DA9A6),
                                       Color(0xFF07A869)
@@ -420,7 +422,7 @@ class _SavedCardsPageState extends State<SavedCardsPage> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
+          gradient:  AppColor.myGradient??LinearGradient(
             colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

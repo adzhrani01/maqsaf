@@ -78,15 +78,15 @@ class _SuccessPaymentScreenState extends State<SuccessPaymentScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(Icons.check_circle, color: AppColor.whiteColor, size: 64,),
+                      const Icon(Icons.check_circle, color: AppColor.secondaryColor, size: 64,),
                       const SizedBox(height: 10),
                       Text( 'تم الطلب بنجاح', textAlign: TextAlign.start, style: TextStyle(color: Colors.white, fontSize: width * 0.05, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 10),
 
                         const SizedBox(height: 30),
                       CustomButton(
-                        primaryColor :AppColor.whiteColor,
-                        textColor : AppColor.secondaryColor,
+                        primaryColor :AppColor.secondaryColor,
+                        textColor : AppColor.whiteColor,
                         label: 'عودة للصفحة الرئيسية',
                         onTap: () {
                           navigationPush(context, const HomeScreen());

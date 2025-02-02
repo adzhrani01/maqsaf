@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maqsaf_app/core/dialogs/global_bottom_sheet.dart';
 import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
+import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/textfield.dart';
@@ -97,7 +100,7 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient:  AppColor.myGradient??LinearGradient(
               colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -113,6 +116,7 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
                   Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: height * 0.02),
@@ -249,6 +253,8 @@ class _DailyLimitScreenState extends State<DailyLimitScreen> {
                             txtSize: width * 0.04,
                           ),
                         ),
+                        SizedBox(height: 200.h),
+
                       ],
                     ),
                   ),

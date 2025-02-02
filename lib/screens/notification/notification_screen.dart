@@ -28,12 +28,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
 
       appBar: AppBar(
+          backgroundColor:AppColor.primaryColor,
         leading:   Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color:AppColor.primaryColor.withOpacity(0.2),
+
+              color:AppColor.whiteColor.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: InkWell(
@@ -46,11 +48,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
           ),
         ),
-        title: Center(child: Text("الاشعارات")),
+        title: Center(child: Text("الاشعارات",style: TextStyle(color: AppColor.whiteColor),)),
       ),
       body:Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient:  AppColor.myGradient??LinearGradient(
             colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

@@ -83,7 +83,11 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
         child: Scaffold(
           body: Container(
             height: height,
-            decoration: linearGradientDecoration(),
+            decoration: BoxDecoration(
+                gradient:
+
+                AppColor.myGradient),
+            // decoration: linearGradientDecoration(),
             child: ListView(
               children: [
                 _buildAppBar(context, width),
@@ -632,12 +636,14 @@ class _DetailsOrderScreenState extends State<DetailsOrderScreen> {
         const SizedBox(width: 20),
         Expanded(
           flex: 2,
-          child: CustomButton(
-            label: '${widget.item?.price??"--"} س.ر',
-            // label: '${19 * quantity} س.ر',
-            onTap: () {},
-            primaryColor: AppColor.green,
-            txtSize: width * 0.04,
+          child: Container(
+            child: CustomButton(
+              label: '${widget.item?.price??"--"} س.ر',
+              // label: '${19 * quantity} س.ر',
+              onTap: () {},
+              primaryColor: AppColor.secondaryColor,
+              txtSize: width * 0.04,
+            ),
           ),
         ),
       ],

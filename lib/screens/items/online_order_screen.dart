@@ -58,7 +58,11 @@ class _OnlineOrderScreenState extends State<OnlineOrderScreen> {
         child: Scaffold(
           body: Container(
             height: height,
-            decoration: linearGradientDecoration(),
+            decoration: BoxDecoration(
+                gradient:
+
+                AppColor.myGradient),
+            // decoration: linearGradientDecoration(),
             child: Column(
               children: [
                 _buildAppBar(width),

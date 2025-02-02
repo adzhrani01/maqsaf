@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
+import '../constants/colors_constants.dart';
 import '../helpers/size_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/textfield.dart';
@@ -140,7 +141,7 @@ class _ChargeBalanceScreenState extends State<ChargeBalanceScreen> {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient:  AppColor.myGradient??LinearGradient(
               colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

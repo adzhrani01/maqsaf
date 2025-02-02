@@ -5,6 +5,7 @@ import 'package:maqsaf_app/core/dialogs/logout_dialog.dart';
 import 'package:maqsaf_app/screens/core/cubits/ingredients_cubit/ingredients_cubit.dart';
 import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 
+import '../../constants/colors_constants.dart';
 import '../../core/helpers/operation_file.dart';
 import '../../core/widgets/image/image_food.dart';
 import '../items/cubits/items_cubit/items_cubit.dart';
@@ -164,7 +165,7 @@ class _DeletedFoodsPageState extends State<DeletedFoodsPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: AppColor.myGradient?? LinearGradient(
             colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
