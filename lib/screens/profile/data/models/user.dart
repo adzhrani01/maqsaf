@@ -20,6 +20,10 @@ class UserModel with _$UserModel {
     @JsonKey(name: 'image') String? image,
     @JsonKey(name: 'daily_limit') String? dailyLimit,
     @JsonKey(name: 'balance') String? balance,
+    @JsonKey(name: 'height') String? height,
+    @JsonKey(name: 'weight') String? weight,
+    @JsonKey(name: 'age') String? age,
+    @JsonKey(name: 'gender') String? gender,
     @JsonKey(name: 'prohibited_ingredients') List<ItemModel>? prohibitedIngredients,
     @JsonKey(name: 'prohibited_categories') List<ItemModel>?  prohibitedCategories,
   }) = _UserModel;

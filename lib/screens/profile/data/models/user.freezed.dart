@@ -35,6 +35,14 @@ mixin _$UserModel {
   String? get dailyLimit => throw _privateConstructorUsedError;
   @JsonKey(name: 'balance')
   String? get balance => throw _privateConstructorUsedError;
+  @JsonKey(name: 'height')
+  String? get height => throw _privateConstructorUsedError;
+  @JsonKey(name: 'weight')
+  String? get weight => throw _privateConstructorUsedError;
+  @JsonKey(name: 'age')
+  String? get age => throw _privateConstructorUsedError;
+  @JsonKey(name: 'gender')
+  String? get gender => throw _privateConstructorUsedError;
   @JsonKey(name: 'prohibited_ingredients')
   List<ItemModel>? get prohibitedIngredients =>
       throw _privateConstructorUsedError;
@@ -55,21 +63,25 @@ mixin _$UserModel {
 /// @nodoc
 abstract class $UserModelCopyWith<$Res> {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+  _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call(
       {int? id,
-      @JsonKey(name: 'first_name') String? firstName,
-      @JsonKey(name: 'last_name') String? lastName,
-      @JsonKey(name: 'userName') String? userName,
-      @JsonKey(name: 'emailAddress') String? email,
-      @JsonKey(name: 'image') String? image,
-      @JsonKey(name: 'daily_limit') String? dailyLimit,
-      @JsonKey(name: 'balance') String? balance,
-      @JsonKey(name: 'prohibited_ingredients')
-      List<ItemModel>? prohibitedIngredients,
-      @JsonKey(name: 'prohibited_categories')
-      List<ItemModel>? prohibitedCategories});
+        @JsonKey(name: 'first_name') String? firstName,
+        @JsonKey(name: 'last_name') String? lastName,
+        @JsonKey(name: 'userName') String? userName,
+        @JsonKey(name: 'emailAddress') String? email,
+        @JsonKey(name: 'image') String? image,
+        @JsonKey(name: 'daily_limit') String? dailyLimit,
+        @JsonKey(name: 'balance') String? balance,
+        @JsonKey(name: 'height') String? height,
+        @JsonKey(name: 'weight') String? weight,
+        @JsonKey(name: 'age') String? age,
+        @JsonKey(name: 'gender') String? gender,
+        @JsonKey(name: 'prohibited_ingredients')
+        List<ItemModel>? prohibitedIngredients,
+        @JsonKey(name: 'prohibited_categories')
+        List<ItemModel>? prohibitedCategories});
 }
 
 /// @nodoc
@@ -95,6 +107,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? image = freezed,
     Object? dailyLimit = freezed,
     Object? balance = freezed,
+    Object? height = freezed,
+    Object? weight = freezed,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? prohibitedIngredients = freezed,
     Object? prohibitedCategories = freezed,
   }) {
@@ -102,43 +118,59 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
+      as int?,
       firstName: freezed == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       lastName: freezed == lastName
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       userName: freezed == userName
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       dailyLimit: freezed == dailyLimit
           ? _value.dailyLimit
           : dailyLimit // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       balance: freezed == balance
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+      as String?,
+      weight: freezed == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+      as String?,
+      age: freezed == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+      as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+      as String?,
       prohibitedIngredients: freezed == prohibitedIngredients
           ? _value.prohibitedIngredients
           : prohibitedIngredients // ignore: cast_nullable_to_non_nullable
-              as List<ItemModel>?,
+      as List<ItemModel>?,
       prohibitedCategories: freezed == prohibitedCategories
           ? _value.prohibitedCategories
           : prohibitedCategories // ignore: cast_nullable_to_non_nullable
-              as List<ItemModel>?,
+      as List<ItemModel>?,
     ) as $Val);
   }
 }
@@ -147,23 +179,27 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 abstract class _$$UserModelImplCopyWith<$Res>
     implements $UserModelCopyWith<$Res> {
   factory _$$UserModelImplCopyWith(
-          _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
-      __$$UserModelImplCopyWithImpl<$Res>;
+      _$UserModelImpl value, $Res Function(_$UserModelImpl) then) =
+  __$$UserModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {int? id,
-      @JsonKey(name: 'first_name') String? firstName,
-      @JsonKey(name: 'last_name') String? lastName,
-      @JsonKey(name: 'userName') String? userName,
-      @JsonKey(name: 'emailAddress') String? email,
-      @JsonKey(name: 'image') String? image,
-      @JsonKey(name: 'daily_limit') String? dailyLimit,
-      @JsonKey(name: 'balance') String? balance,
-      @JsonKey(name: 'prohibited_ingredients')
-      List<ItemModel>? prohibitedIngredients,
-      @JsonKey(name: 'prohibited_categories')
-      List<ItemModel>? prohibitedCategories});
+        @JsonKey(name: 'first_name') String? firstName,
+        @JsonKey(name: 'last_name') String? lastName,
+        @JsonKey(name: 'userName') String? userName,
+        @JsonKey(name: 'emailAddress') String? email,
+        @JsonKey(name: 'image') String? image,
+        @JsonKey(name: 'daily_limit') String? dailyLimit,
+        @JsonKey(name: 'balance') String? balance,
+        @JsonKey(name: 'height') String? height,
+        @JsonKey(name: 'weight') String? weight,
+        @JsonKey(name: 'age') String? age,
+        @JsonKey(name: 'gender') String? gender,
+        @JsonKey(name: 'prohibited_ingredients')
+        List<ItemModel>? prohibitedIngredients,
+        @JsonKey(name: 'prohibited_categories')
+        List<ItemModel>? prohibitedCategories});
 }
 
 /// @nodoc
@@ -187,6 +223,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? image = freezed,
     Object? dailyLimit = freezed,
     Object? balance = freezed,
+    Object? height = freezed,
+    Object? weight = freezed,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? prohibitedIngredients = freezed,
     Object? prohibitedCategories = freezed,
   }) {
@@ -194,43 +234,59 @@ class __$$UserModelImplCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
+      as int?,
       firstName: freezed == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       lastName: freezed == lastName
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       userName: freezed == userName
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       image: freezed == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       dailyLimit: freezed == dailyLimit
           ? _value.dailyLimit
           : dailyLimit // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
       balance: freezed == balance
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
-              as String?,
+      as String?,
+      height: freezed == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+      as String?,
+      weight: freezed == weight
+          ? _value.weight
+          : weight // ignore: cast_nullable_to_non_nullable
+      as String?,
+      age: freezed == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+      as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+      as String?,
       prohibitedIngredients: freezed == prohibitedIngredients
           ? _value._prohibitedIngredients
           : prohibitedIngredients // ignore: cast_nullable_to_non_nullable
-              as List<ItemModel>?,
+      as List<ItemModel>?,
       prohibitedCategories: freezed == prohibitedCategories
           ? _value._prohibitedCategories
           : prohibitedCategories // ignore: cast_nullable_to_non_nullable
-              as List<ItemModel>?,
+      as List<ItemModel>?,
     ));
   }
 }
@@ -240,17 +296,21 @@ class __$$UserModelImplCopyWithImpl<$Res>
 class _$UserModelImpl extends _UserModel {
   const _$UserModelImpl(
       {this.id,
-      @JsonKey(name: 'first_name') this.firstName,
-      @JsonKey(name: 'last_name') this.lastName,
-      @JsonKey(name: 'userName') this.userName,
-      @JsonKey(name: 'emailAddress') this.email,
-      @JsonKey(name: 'image') this.image,
-      @JsonKey(name: 'daily_limit') this.dailyLimit,
-      @JsonKey(name: 'balance') this.balance,
-      @JsonKey(name: 'prohibited_ingredients')
-      final List<ItemModel>? prohibitedIngredients,
-      @JsonKey(name: 'prohibited_categories')
-      final List<ItemModel>? prohibitedCategories})
+        @JsonKey(name: 'first_name') this.firstName,
+        @JsonKey(name: 'last_name') this.lastName,
+        @JsonKey(name: 'userName') this.userName,
+        @JsonKey(name: 'emailAddress') this.email,
+        @JsonKey(name: 'image') this.image,
+        @JsonKey(name: 'daily_limit') this.dailyLimit,
+        @JsonKey(name: 'balance') this.balance,
+        @JsonKey(name: 'height') this.height,
+        @JsonKey(name: 'weight') this.weight,
+        @JsonKey(name: 'age') this.age,
+        @JsonKey(name: 'gender') this.gender,
+        @JsonKey(name: 'prohibited_ingredients')
+        final List<ItemModel>? prohibitedIngredients,
+        @JsonKey(name: 'prohibited_categories')
+        final List<ItemModel>? prohibitedCategories})
       : _prohibitedIngredients = prohibitedIngredients,
         _prohibitedCategories = prohibitedCategories,
         super._();
@@ -281,6 +341,18 @@ class _$UserModelImpl extends _UserModel {
   @override
   @JsonKey(name: 'balance')
   final String? balance;
+  @override
+  @JsonKey(name: 'height')
+  final String? height;
+  @override
+  @JsonKey(name: 'weight')
+  final String? weight;
+  @override
+  @JsonKey(name: 'age')
+  final String? age;
+  @override
+  @JsonKey(name: 'gender')
+  final String? gender;
   final List<ItemModel>? _prohibitedIngredients;
   @override
   @JsonKey(name: 'prohibited_ingredients')
@@ -307,7 +379,7 @@ class _$UserModelImpl extends _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, userName: $userName, email: $email, image: $image, dailyLimit: $dailyLimit, balance: $balance, prohibitedIngredients: $prohibitedIngredients, prohibitedCategories: $prohibitedCategories)';
+    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, userName: $userName, email: $email, image: $image, dailyLimit: $dailyLimit, balance: $balance, height: $height, weight: $weight, age: $age, gender: $gender, prohibitedIngredients: $prohibitedIngredients, prohibitedCategories: $prohibitedCategories)';
   }
 
   @override
@@ -327,6 +399,10 @@ class _$UserModelImpl extends _UserModel {
             (identical(other.dailyLimit, dailyLimit) ||
                 other.dailyLimit == dailyLimit) &&
             (identical(other.balance, balance) || other.balance == balance) &&
+            (identical(other.height, height) || other.height == height) &&
+            (identical(other.weight, weight) || other.weight == weight) &&
+            (identical(other.age, age) || other.age == age) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
             const DeepCollectionEquality()
                 .equals(other._prohibitedIngredients, _prohibitedIngredients) &&
             const DeepCollectionEquality()
@@ -345,6 +421,10 @@ class _$UserModelImpl extends _UserModel {
       image,
       dailyLimit,
       balance,
+      height,
+      weight,
+      age,
+      gender,
       const DeepCollectionEquality().hash(_prohibitedIngredients),
       const DeepCollectionEquality().hash(_prohibitedCategories));
 
@@ -367,21 +447,25 @@ class _$UserModelImpl extends _UserModel {
 abstract class _UserModel extends UserModel {
   const factory _UserModel(
       {final int? id,
-      @JsonKey(name: 'first_name') final String? firstName,
-      @JsonKey(name: 'last_name') final String? lastName,
-      @JsonKey(name: 'userName') final String? userName,
-      @JsonKey(name: 'emailAddress') final String? email,
-      @JsonKey(name: 'image') final String? image,
-      @JsonKey(name: 'daily_limit') final String? dailyLimit,
-      @JsonKey(name: 'balance') final String? balance,
-      @JsonKey(name: 'prohibited_ingredients')
-      final List<ItemModel>? prohibitedIngredients,
-      @JsonKey(name: 'prohibited_categories')
-      final List<ItemModel>? prohibitedCategories}) = _$UserModelImpl;
+        @JsonKey(name: 'first_name') final String? firstName,
+        @JsonKey(name: 'last_name') final String? lastName,
+        @JsonKey(name: 'userName') final String? userName,
+        @JsonKey(name: 'emailAddress') final String? email,
+        @JsonKey(name: 'image') final String? image,
+        @JsonKey(name: 'daily_limit') final String? dailyLimit,
+        @JsonKey(name: 'balance') final String? balance,
+        @JsonKey(name: 'height') final String? height,
+        @JsonKey(name: 'weight') final String? weight,
+        @JsonKey(name: 'age') final String? age,
+        @JsonKey(name: 'gender') final String? gender,
+        @JsonKey(name: 'prohibited_ingredients')
+        final List<ItemModel>? prohibitedIngredients,
+        @JsonKey(name: 'prohibited_categories')
+        final List<ItemModel>? prohibitedCategories}) = _$UserModelImpl;
   const _UserModel._() : super._();
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$UserModelImpl.fromJson;
+  _$UserModelImpl.fromJson;
 
   @override
   int? get id;
@@ -406,6 +490,18 @@ abstract class _UserModel extends UserModel {
   @override
   @JsonKey(name: 'balance')
   String? get balance;
+  @override
+  @JsonKey(name: 'height')
+  String? get height;
+  @override
+  @JsonKey(name: 'weight')
+  String? get weight;
+  @override
+  @JsonKey(name: 'age')
+  String? get age;
+  @override
+  @JsonKey(name: 'gender')
+  String? get gender;
   @override
   @JsonKey(name: 'prohibited_ingredients')
   List<ItemModel>? get prohibitedIngredients;

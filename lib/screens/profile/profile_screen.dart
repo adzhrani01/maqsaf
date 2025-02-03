@@ -26,11 +26,11 @@ class ProfileScreen extends StatelessWidget {
             gradient:
 
             AppColor.myGradient??
-            LinearGradient(
-              colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+                LinearGradient(
+                  colors: [Color(0xFF0DA9A6), Color(0xFF07A869)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
           ),
           child: BlocConsumer<UserCubit, UserState>(
               listener: (context, state) {
@@ -38,132 +38,158 @@ class ProfileScreen extends StatelessWidget {
               buildWhen: (prev,next)=>next==UserState.save(),
               builder: (context, state) {
                 final user= context.read<UserCubit>().user;
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 300.h,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.bottomRight,
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 300.h,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(40),
+                            bottomRight: Radius.circular(40),
+                          ),
                         ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(40),
-                          bottomRight: Radius.circular(40),
+                        child: SafeArea(
+                          bottom: false,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'الملف الشخصي',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 60),
+                            ],
+                          ),
                         ),
                       ),
-                      child: SafeArea(
-                        bottom: false,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'الملف الشخصي',
+                      Transform.translate(
+                        offset:  Offset(0, -230.h),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              _buildProfileImage(url:user?.image),
+                              const SizedBox(height: 20),
+                              Text(
+                                user?.completeName??
+                                    'محمد خالد الحربي',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColor.whiteColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: AppColor.whiteColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'طالب',
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    color:  AppColor.whiteColor,
+                                    fontSize: width * 0.035,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 60),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset:  Offset(0, -230.h),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            _buildProfileImage(url:user?.image),
-                            const SizedBox(height: 20),
-                             Text(
-                              user?.completeName??
-                              'محمد خالد الحربي',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.whiteColor,
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: AppColor.whiteColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
+                              const SizedBox(height: 30),
+                              _buildInfoItem(
+                                'المدرسة',
+                                'عبدالرحمن فقية',
+                                Icons.school_outlined,
                               ),
-                              child: Text(
-                                'طالب',
-                                style: TextStyle(
-                                  color:  AppColor.whiteColor,
-                                  fontSize: width * 0.035,
-                                  fontWeight: FontWeight.w500,
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'البريد الإلكتروني',
+                                user?.email??
+                                    'user@gmail.com',
+                                Icons.email_outlined,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'رقم الهوية',
+                                '123456789',
+                                Icons.credit_card_outlined,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'العمر',
+
+                                '${user?.age??'-'} سنة',
+                                Icons.cake_outlined,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'الطول',
+                                '${user?.height??'-'} سم',
+                                Icons.height_outlined,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'الوزن',
+                                '${user?.weight??'-'} كجم',
+                                Icons.monitor_weight_outlined,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildInfoItem(
+                                'الجنس',
+                                user?.gender??
+                                    'ذكر',
+                                Icons.person_outline,
+                              ),
+                              const SizedBox(height: 30),
+                              SizedBox(
+                                width: double.infinity,
+                                child: CustomButton(
+                                  label: 'تسجيل الخروج',
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        backgroundColor: ColorManager.whiteColor,
+                                        isScrollControlled: true,
+                                        enableDrag: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => LogoutDialog());
+                                  },
+                                  primaryColor: Colors.white,
+                                  borderColor: Colors.red,
+                                  textColor: Colors.red,
+                                  txtSize: width * 0.04,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 30),
-                            _buildInfoItem(
-                              'المدرسة',
-                              'عبدالرحمن فقية',
-                              Icons.school_outlined,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInfoItem(
-                              'البريد الإلكتروني',
-                              user?.email??
-                              'user@gmail.com',
-                              Icons.email_outlined,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInfoItem(
-                              'رقم الهوية',
-                              '123456789',
-                              Icons.credit_card_outlined,
-                            ),
-                            const SizedBox(height: 30),
-                            SizedBox(
-                              width: double.infinity,
-                              child: CustomButton(
-                                label: 'تسجيل الخروج',
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      backgroundColor: ColorManager.whiteColor,
-                                      isScrollControlled: true,
-                                      enableDrag: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => LogoutDialog());
-                                },
-                                primaryColor: Colors.white,
-                                borderColor: Colors.red,
-                                textColor: Colors.red,
-                                txtSize: width * 0.04,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }
+                    ],
+                  ),
+                );
+              }
           ),
         ),
       ),
@@ -188,7 +214,7 @@ class ProfileScreen extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
         child:
-              ImageUser(url: url,fit: BoxFit.cover),
+        ImageUser(url: url,fit: BoxFit.cover),
         // Image.asset(
         //   AssetsPath.rectangle_student,
         //   fit: BoxFit.cover,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/assets_path.dart';
 import '../constants/colors_constants.dart';
@@ -38,17 +40,17 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
   // }
   GenerativeModel? model;
   Future<void> init() async {
-     model = GenerativeModel(
+    model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey: "AIzaSyDob9CbYcZO0xNWn7N3p_yhlArbSqiqDrY",
     );
-     isLoading=false;
+    isLoading=false;
   }
-bool isLoading=false;
+  bool isLoading=false;
 
 
   Future<void> _sendMessageAi(String message)async {
-if(isLoading) return;
+    if(isLoading) return;
     if (message.trim().isEmpty) return;
 
     setState(() {
@@ -93,8 +95,8 @@ if(isLoading) return;
         'timestamp': DateTime.now(),
       });
     }finally{
-    isLoading=false;
-  }
+      isLoading=false;
+    }
     setState(() {});
     Future.delayed(const Duration(milliseconds: 100), () {
       _scrollController.animateTo(
@@ -208,7 +210,7 @@ if(isLoading) return;
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                 ),
-                // Navigator.pop(context),
+            // Navigator.pop(context),
           ),
           const SizedBox(width: 8),
           const Text(
@@ -235,7 +237,7 @@ if(isLoading) return;
 
       child: Row(
         mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -252,18 +254,32 @@ if(isLoading) return;
               decoration: BoxDecoration(
                 color: isUser
                     ? const Color(0xFF2D91C0).withOpacity(0.8)
-                :message['isWrong']==true?
+                    :message['isWrong']==true?
                 Colors.red.withOpacity(0.1)
                     : Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                message['message'] as String,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+              child:
+              MarkdownBody(
+                data: message['message'] as String,
+                styleSheet: MarkdownStyleSheet(
+                  p: const TextStyle(color: Colors.white, fontSize: 16),
+                  strong: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  em: const TextStyle(color: Colors.white, fontStyle: FontStyle.italic),
+                  h1: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  h2: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                  h3: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  a: const TextStyle(color: Colors.lightBlue), // تنسيق الروابط
                 ),
               ),
+
+              // Text(
+              //   message['message'] as String,
+              //   style: const TextStyle(
+              //     color: Colors.white,
+              //     fontSize: 16,
+              //   ),
+              // ),
             ),
           ),
           if (isUser) ...[
@@ -394,7 +410,7 @@ if(isLoading) return;
           const SizedBox(width: 12),
           _buildCircularButton(
             Icons.send,
-            () => _sendMessageAi(_messageController.text),
+                () => _sendMessageAi(_messageController.text),
             // () => _sendMessage(_messageController.text),
             color: const Color(0xFF2D91C0),
           ),
