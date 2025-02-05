@@ -1,7 +1,9 @@
 //final  baseUrl ="http://localhost:8080/";
-const baseServ = "https://khaledsukkar.pythonanywhere.com/";
+// const baseServ = "https:https//khaledsukkar.pythonanywheree.com/";
+const baseServ = "https://maqsaf.pythonanywhere.com/";
 const baseUrl = "${baseServ}api/v1/";
-const storageUrl = "https://khaledsukkar.pythonanywhere.com";
+const storageUrl = "https://maqsaf.pythonanywhere.com";
+// const storageUrageUrl = "https://khaledsukkar.pythonanywhere.com";
 const user = "user/";
 const auth = "auth/";
 const students = "students/";

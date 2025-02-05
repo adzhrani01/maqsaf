@@ -127,7 +127,10 @@ class SelectStudentScreen extends StatelessWidget {
                 )),
             Expanded(
                 flex: 1, child:
-            ImageUser(url: user.image,)
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: ImageUser(url: user.image,fit: BoxFit.cover,width: 70.w,height: 70.w),
+            )
             // Image.asset(AssetsPath.student)
             ),
           ],

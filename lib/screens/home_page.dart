@@ -57,186 +57,186 @@ class _HomePageState extends State<HomePage> {
                 buildWhen: (prev,next)=>next==UserState.save(),
                 builder: (context, state) {
                   final user= context.read<UserCubit>().user;
-                return CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      expandedHeight: 370,
-                      floating: false,
-                      pinned: true,
-                      elevation: 0,
-                      leading: Container(),
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: Container(
-                        decoration: const BoxDecoration(
-                          gradient:
+                  return CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        expandedHeight: 370,
+                        floating: false,
+                        pinned: true,
+                        elevation: 0,
+                        leading: Container(),
+                        backgroundColor: Colors.transparent,
+                        flexibleSpace: Container(
+                          decoration: const BoxDecoration(
+                            gradient:
 
-                          LinearGradient(
-                            colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.bottomRight,
+                            LinearGradient(
+                              colors: [Color(0xFF2D91C0), Color(0xFF15445A)],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(40),
+                              bottomRight: Radius.circular(40),
+                            ),
                           ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40),
-                          ),
-                        ),
-                        child: FlexibleSpaceBar(
-                          background: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // Header Section
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.menu,
-                                              color: Colors.white),
-                                          onPressed: () {
-                                            navigationPush(
-                                                context, SelectStudentScreen());
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.notifications,
-                                              color: Colors.white),
-                                          onPressed: () {
-                                            navigationPush(
-                                                context, NotificationScreen());
-                                          },
-                                        ),
-
-                                      ],
-                                    ),
-
-                                    _buildIconButton(Icons.shopping_cart, () {
-                                      navigationPush(context, const CartScreen());
-                                    }),
-                                    // Container()
-                                  ],
-                                ),
-                              ),
-
-                              // Profile Section with Stats
-                              Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Colors.white, width: 2),
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: width * 0.12,
-                                        child:  ImageUser(url: user?.image,),
-                                        // backgroundImage:
-                                      //   AssetImage(
-                                      //       AssetsPath.rectangle_student),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      user?.completeName??
-                                      'محمد خالد الحربي',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: width * 0.05,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15, horizontal: 20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color: Colors.white.withOpacity(0.2)),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                          child: FlexibleSpaceBar(
+                            background: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                // Header Section
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
                                         children: [
-                                          _buildHeaderStat('الحد اليومي', '${ user?.dailyLimit??'-'} س.ر'),
-                                          // _buildHeaderStat('الحد اليومي', '10 س.ر'),
-                                          Container(
-                                            height: 40,
-                                            width: 1,
-                                            color: Colors.white.withOpacity(0.3),
+                                          IconButton(
+                                            icon: const Icon(Icons.menu,
+                                                color: Colors.white),
+                                            onPressed: () {
+                                              navigationPush(
+                                                  context, SelectStudentScreen());
+                                            },
                                           ),
-                                          _buildHeaderStat(
-                                              'الرصيد الحالي', '${ user?.balance??'-'} س.ر'),
-                                              // 'الرصيد الحالي', '55 س.ر'),
-                                          Container(
-                                            height: 40,
-                                            width: 1,
-                                            color: Colors.white.withOpacity(0.3),
+                                          IconButton(
+                                            icon: const Icon(Icons.notifications,
+                                                color: Colors.white),
+                                            onPressed: () {
+                                              navigationPush(
+                                                  context, NotificationScreen());
+                                            },
                                           ),
-                                          _buildHeaderStat('رقم الطالب', '${ user?.id??'-'}'),
-                                          // _buildHeaderStat('رقم الطالب', '0001'),
+
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
 
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'الخدمات السريعة',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.whiteColor,
-                                      shadows:[
-                                        BoxShadow(
-                                          color: AppColor.secondaryColor,
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 5),
-                                        ),
-                                      ]
+                                      _buildIconButton(Icons.shopping_cart, () {
+                                        navigationPush(context, const CartScreen());
+                                      }),
+                                      // Container()
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 20),
-                                _buildGridMenu(context),
+
+                                // Profile Section with Stats
+                                Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.white, width: 2),
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: width * 0.12,
+                                          child:  ImageUser(url: user?.image,fit: BoxFit.cover,width:  width * 0.4,height: width * 0.4,),
+                                          // backgroundImage:
+                                          //   AssetImage(
+                                          //       AssetsPath.rectangle_student),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        user?.completeName??
+                                            'محمد خالد الحربي',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: width * 0.05,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15, horizontal: 20),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color: Colors.white.withOpacity(0.2)),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                          children: [
+                                            _buildHeaderStat('الحد اليومي', '${ user?.dailyLimit??'-'} س.ر'),
+                                            // _buildHeaderStat('الحد اليومي', '10 س.ر'),
+                                            Container(
+                                              height: 40,
+                                              width: 1,
+                                              color: Colors.white.withOpacity(0.3),
+                                            ),
+                                            _buildHeaderStat(
+                                                'الرصيد الحالي', '${ user?.balance??'-'} س.ر'),
+                                            // 'الرصيد الحالي', '55 س.ر'),
+                                            Container(
+                                              height: 40,
+                                              width: 1,
+                                              color: Colors.white.withOpacity(0.3),
+                                            ),
+                                            _buildHeaderStat('رقم الطالب', '${ user?.id??'-'}'),
+                                            // _buildHeaderStat('رقم الطالب', '0001'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          BlocBuilder<OrdersCubit,OrdersState>(
-                              buildWhen: (previous, current)=>context.read<OrdersCubit>().buildItemsWhen(previous, current),
-                              builder: (context, state)=>
-                                  context.read<OrdersCubit>().buildItems(context, state,
-                                      CafeteriaOrdersWidget(items:context.read<OrdersCubit>().items))
-                          )
-                         ,
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }
+
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'الخدمات السريعة',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.whiteColor,
+                                        shadows:[
+                                          BoxShadow(
+                                            color: AppColor.secondaryColor,
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 5),
+                                          ),
+                                        ]
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  _buildGridMenu(context),
+                                ],
+                              ),
+                            ),
+                            BlocBuilder<OrdersCubit,OrdersState>(
+                                buildWhen: (previous, current)=>context.read<OrdersCubit>().buildItemsWhen(previous, current),
+                                builder: (context, state)=>
+                                    context.read<OrdersCubit>().buildItems(context, state,
+                                        CafeteriaOrdersWidget(items:context.read<OrdersCubit>().items))
+                            )
+                            ,
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
             ),
           ),
         ),

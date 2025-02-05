@@ -36,11 +36,11 @@ mixin _$UserModel {
   @JsonKey(name: 'balance')
   String? get balance => throw _privateConstructorUsedError;
   @JsonKey(name: 'height')
-  String? get height => throw _privateConstructorUsedError;
+  int? get height => throw _privateConstructorUsedError;
   @JsonKey(name: 'weight')
-  String? get weight => throw _privateConstructorUsedError;
+  int? get weight => throw _privateConstructorUsedError;
   @JsonKey(name: 'age')
-  String? get age => throw _privateConstructorUsedError;
+  int? get age => throw _privateConstructorUsedError;
   @JsonKey(name: 'gender')
   String? get gender => throw _privateConstructorUsedError;
   @JsonKey(name: 'prohibited_ingredients')
@@ -74,9 +74,9 @@ abstract class $UserModelCopyWith<$Res> {
         @JsonKey(name: 'image') String? image,
         @JsonKey(name: 'daily_limit') String? dailyLimit,
         @JsonKey(name: 'balance') String? balance,
-        @JsonKey(name: 'height') String? height,
-        @JsonKey(name: 'weight') String? weight,
-        @JsonKey(name: 'age') String? age,
+        @JsonKey(name: 'height') int? height,
+        @JsonKey(name: 'weight') int? weight,
+        @JsonKey(name: 'age') int? age,
         @JsonKey(name: 'gender') String? gender,
         @JsonKey(name: 'prohibited_ingredients')
         List<ItemModel>? prohibitedIngredients,
@@ -150,15 +150,15 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       height: freezed == height
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       weight: freezed == weight
           ? _value.weight
           : weight // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
@@ -192,9 +192,9 @@ abstract class _$$UserModelImplCopyWith<$Res>
         @JsonKey(name: 'image') String? image,
         @JsonKey(name: 'daily_limit') String? dailyLimit,
         @JsonKey(name: 'balance') String? balance,
-        @JsonKey(name: 'height') String? height,
-        @JsonKey(name: 'weight') String? weight,
-        @JsonKey(name: 'age') String? age,
+        @JsonKey(name: 'height') int? height,
+        @JsonKey(name: 'weight') int? weight,
+        @JsonKey(name: 'age') int? age,
         @JsonKey(name: 'gender') String? gender,
         @JsonKey(name: 'prohibited_ingredients')
         List<ItemModel>? prohibitedIngredients,
@@ -266,15 +266,15 @@ class __$$UserModelImplCopyWithImpl<$Res>
       height: freezed == height
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       weight: freezed == weight
           ? _value.weight
           : weight // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-      as String?,
+      as int?,
       gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
@@ -343,13 +343,13 @@ class _$UserModelImpl extends _UserModel {
   final String? balance;
   @override
   @JsonKey(name: 'height')
-  final String? height;
+  final int? height;
   @override
   @JsonKey(name: 'weight')
-  final String? weight;
+  final int? weight;
   @override
   @JsonKey(name: 'age')
-  final String? age;
+  final int? age;
   @override
   @JsonKey(name: 'gender')
   final String? gender;
@@ -454,9 +454,9 @@ abstract class _UserModel extends UserModel {
         @JsonKey(name: 'image') final String? image,
         @JsonKey(name: 'daily_limit') final String? dailyLimit,
         @JsonKey(name: 'balance') final String? balance,
-        @JsonKey(name: 'height') final String? height,
-        @JsonKey(name: 'weight') final String? weight,
-        @JsonKey(name: 'age') final String? age,
+        @JsonKey(name: 'height') final int? height,
+        @JsonKey(name: 'weight') final int? weight,
+        @JsonKey(name: 'age') final int? age,
         @JsonKey(name: 'gender') final String? gender,
         @JsonKey(name: 'prohibited_ingredients')
         final List<ItemModel>? prohibitedIngredients,
@@ -492,13 +492,13 @@ abstract class _UserModel extends UserModel {
   String? get balance;
   @override
   @JsonKey(name: 'height')
-  String? get height;
+  int? get height;
   @override
   @JsonKey(name: 'weight')
-  String? get weight;
+  int? get weight;
   @override
   @JsonKey(name: 'age')
-  String? get age;
+  int? get age;
   @override
   @JsonKey(name: 'gender')
   String? get gender;

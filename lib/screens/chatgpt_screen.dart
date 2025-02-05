@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
+import 'package:maqsaf_app/screens/profile/cubits/user_cubit/user_cubit.dart';
 import 'package:maqsaf_app/widgets/components.dart';
 import '../constants/assets_path.dart';
 import '../constants/colors_constants.dart';
@@ -44,12 +45,18 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
       model: 'gemini-1.5-flash',
       apiKey: "AIzaSyDob9CbYcZO0xNWn7N3p_yhlArbSqiqDrY",
     );
+    final user= context.read<UserCubit>().user;
+
+    // await model?.generateContent([Content.text("مرحبا، سوف ارسل لك معلومات الطالب اريد اجاباتك التالية بناء على هذه المعلومات،الطول  ${user?.height??""} سم، الوزن  ${user?.weight??""} كغ، الاسم  ${user?.completeName??""}، العمر  ${user?.age??""} سنة، الجنس  ${user?.gender??""}.")]);
+
     isLoading=false;
+
   }
   bool isLoading=false;
 
 
   Future<void> _sendMessageAi(String message)async {
+    final user= context.read<UserCubit>().user;
     if(isLoading) return;
     if (message.trim().isEmpty) return;
 
@@ -78,7 +85,11 @@ class _ChatgptScreenState extends State<ChatgptScreen> {
       );
     });
     try{
-      final response = await model?.generateContent([Content.text(message)]);
+      final response = await model?.generateContent([Content.text(
+          ("مرحبا،اريد الاجابات ان تكون متعلقة ضمن نطاق (الطالب والوجبات وطلبات الوجبات والوجبات المفضلة والمحذوفة ومكونات الوجبات وسلة الوجبات والدفع لاوردر الوجبات وبطاقات الدفع) سوف ارسل لك معلومات الطالب اريد اجاباتك التالية بناء على هذه المعلومات،الطول  ${user?.height??""} سم، الوزن  ${user?.weight??""} كغ، الاسم  ${user?.completeName??""}، العمر  ${user?.age??""} سنة، الجنس  ${user?.gender??""}.")
+              +"\n"+"السؤال:${message}"
+        // message
+      )]);
       _messages.removeLast();
       _messages.add({
 
